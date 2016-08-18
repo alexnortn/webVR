@@ -51,6 +51,7 @@ Virtual Reality
 	Examples: APPs / Experiences
 
 	How will this change the way we visualize data --> experience data
+		VR has the capability to transform complex information into rich intuitive experience by inviting exploration with familiar metaphor and delightful interaction.
 
 Demo
 	Enjoy
