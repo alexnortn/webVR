@@ -8,7 +8,7 @@
 Immersive Data Visualization for the Web
 -
 
-N A R R A T I V E   O U T L I N E
+What are the possibilities of data visualization mediated by virtual reality? Positioned at the intersection of storytelling, design, and technology, VR has the capability to transform complex information into rich intuitive experience by increasing focus and inviting exploration. How will this new medium change the way we visualize and experience data?
 
 Whois: Alex Norton
 	Background
@@ -50,13 +50,15 @@ Virtual Reality
 	What does VR do not so well? 
 	Examples: APPs / Experiences
 
-	How will this change the way we visualize data --> experience data
-		VR has the capability to transform complex information into rich intuitive experience by inviting exploration with familiar metaphor and delightful interaction.
+	^ Add demo + deploy --> power of web technologies
 
 Demo
 	Enjoy
 		Checkout this thing, here play with it yourself!
 		Bring your cardboard
+
+	Planning your VR experience
+		Google Tiltbrush
 
 	Deploy or Die
 		Let's make a thing, together
