@@ -8,6 +8,8 @@
 Immersive Data Visualization for the Web
 -
 
+N A R R A T I V E   O U T L I N E
+
 Whois: Alex Norton
 	Background
 	Work
@@ -26,6 +28,8 @@ Data Visualization
 		Pioneering, new Frontiers
 		Creativity vs. Technology
 		Edward Tufte --> Visual Display of Quanititative Information etc
+		Technology as Medium
+		Latest chapter in this book --> VR + AR
 
 Virtual Reality
 	Background
