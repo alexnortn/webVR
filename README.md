@@ -23,6 +23,7 @@ Data Visualization
 	
 	Common unifying factor: Technology
 		Define "technology"
+		Pioneering, new Frontiers
 		Creativity vs. Technology
 		Edward Tufte --> Visual Display of Quanititative Information etc
 
@@ -59,6 +60,7 @@ Demo: Develop
 Demo: Design
 
 	UX/UI Patterns
+		Navigation
 		Interaction
 		Buttons
 		Text
