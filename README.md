@@ -28,7 +28,7 @@ Data Visualization
 		Define "technology"
 		Pioneering, new Frontiers, Innovation
 		Creativity vs. Technology, doesn't mean it communicates well
-		Edward Tufte --> Visual Display of Quanititative Information etc
+		Edward Tufte --> Visual Display of Quantitative Information etc
 		Technology as Medium
 		Latest chapter in this book --> VR + AR
 
@@ -39,6 +39,35 @@ Virtual Reality
 		View Scope, JFF
 	Examples: HMDs
 		Pro / Con + Taxonomy
+	Technical Capabilities
+		Intent Capture
+			How well can we understand what the usre wants to do?
+		Persona Capture
+			How well can we project the user into an environment?
+		Environment Capture
+			How well can we capture the properties of a real environment?
+		Environment Rendering
+			With what fidelity can we render a simulation across all modalities?
+	Consumer VR Applications
+		Productivity
+		Business Communication
+		Personal Communication
+		Communities
+		Games
+		Live Events
+		Cinema
+		Real Estate
+		Journalism
+		Education
+		Expanded Perception
+		Travel
+	Design Domains
+		Usability
+			Do we know how to make the user procuctive and empowered?
+		Narrative
+			Do we know how to tell a story, direct, attention, and guide emotion?
+		Information Presentation
+			Do we know how to generate and environmente that creates understanding?
 	What does VR do well?
 		Immersive
 		Focus + Exploration
@@ -47,7 +76,8 @@ Virtual Reality
 		Empathy
 		Extend Screen Real Estate
 		Storytelling + Narrative
-	What does VR do not so well? 
+	What does VR do not so well?
+		Traditional Charting Language
 	Examples: APPs / Experiences
 
 	^ Add demo + deploy --> power of web technologies
