@@ -6,5 +6,67 @@ Alex Norton
 2016
 -
 
+
+What is A-Frame?
+
+A-Frame is an open-source WebVR framework for creating virtual reality (VR) experiences with HTML. We can build VR scenes that work across smartphones, desktop, the Oculus Rift, and the room-scale HTC Vive.
+
+	+ Build what would have once been a complex web app with simple HTML markup.
+	+ Speed (native) vs Accessibility + Usability (WebVR)
+	+ A-Frame is a three.js framework that brings the entity-component-system pattern to the DOM
+	+ Everything in a scene is an entity which we compose and attach components to add any appearance, behavior, and functionality.
+
+
+<a-entity> 
+
+Represents an entity, attributes represent components, and attribute values represent component properties. Components can do anything. Say someone publishes a physics component and someone else publishes an explode component. We can compose them together and attach them to the entity to add the behavior of exploding collision.
+
+	+ Get a simple figure going for this.
+	+ This feels a lot like Angular :)
+	+ MVC --> A-Frame --> three.js --> webGL
+
+A-Frame was build by the Mozilla VR team to make it quicker and easier to build 3D/VR scenes in order for them to prototype faster and to bridge the web development community into the WebVR ecosystem.
+
+	+ For WebVr to succeed, it needs content.
+
+There are only a handful of WebGL developers in the world, but there are millions of web developers, designers, and artists. A-Frame pust 3D/VR content creation into the hands of everyone.
+
+
+A-Frame reduces boilerplate
+
+Without A-Frame, starting a proper WebVR project is a lot of effort. You need to know what you are doing and repeat the same tedious work for every scene.
+
+	+ <a-scene>
+	+ Rather than creating a mesh, creating geometry, creating a material, then appending to scene, that is all also reduced to a single line of HTML.
+
+
+Intergrating with existing web frameworks
+
+	+ d3
+	+ React
+	+ Vue.js
+	+ Meteor
+	+ jQuery
+
+"A-Frame is like when MVC landed in traditional front-end work...[where] three.js is like jQuery" –@wizrav
+
+	+ Referring to Model View Controller --> Angular
+
+Three.js had made it very accessible to develop webGL, but three.js code is often loosely structured. A-frame provides a way to structure three.js code.
+
+A-Frame is a declaritive entity-component system framework for three.js
+
+Developers can modularize three.js and Javascript code within A-Frame components. These components can be composed with one another. If published and shared, these componenets can be used by other developers via HTML.
+
+	+ We're designing web applications, not websites.
+
+
+
+---
 Getting Started with A-Frame
+
+
+Simply include a reference to A-Frame in your document head
+
+
 
