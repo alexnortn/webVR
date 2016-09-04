@@ -250,5 +250,88 @@ Then we can tell the animation only to start when the cursor clicks the box even
 		</a-camera>
 	</a-scene>
 
+As an aside, a more advanced method would be to write a component that listens to an event and does whatever we want it to do:
 
+	AFRAME.registerComponent('scale-on-click'. { <!-- name of component -->
+		schema: {
+			to: {default: '2 2 2'} <!-- default values -->
+		},
+		init: function() {
+			var data = this.data;
+			this.el.addEventListener('click', function() { <!-- type of listener -->
+				this.setAttribute('scale', data.to); <!-- pick attribute to set -->
+			});
+		}
+	});
+
+And we can attatch the componenet to the <a-box> primitive:
+
+	<a-box color="#FFF"
+			width="4"
+			height="10"
+			depth="2"
+			position="-10 2 -5"
+			rotation="0 0 45"
+			scale="2 0.5 3"
+			scr="#texture.png"
+			scale-on-click="t0: 3 3 3"> <!-- Added custom component as defined above -->
+		<a-animation attribute="rotation" begin="click" repeat="indefinite" to="0 360 0"></a-animation>	
+	</a-box>
+
+
+Lighting the Box
+
+We can change how the scene is lit with <a-light>. By default, the scene will inject an ambient light and a directional light (which acts like the sun). Once we add lights of our own, this default lighting setup is removed:
+
+	<a-scene>
+		<a-assets>
+			<img id="texture" scr="texture.png">
+		</a-assets>
+		<a-box color="#FFF"
+				width="4"
+				height="10"
+				depth="2"
+				position="-10 2 -5"
+				rotation="0 0 45"
+				scale="2 0.5 3"
+				scr="#texture">
+			<a-animation attribute="rotation" begin="click" repeat="indefinite" to="0 360 0"></a-animation>
+		</a-box>
+		<!-- New Lights. Note the super cool "Look-At" attribute -->
+		<a-light type="spot" color="#333" position="-20 0 0" look-at="a-box"></a-light>
+		<a-light type="point" color="#AAA" position="-0 5 0"></a-light>
+		<a-camera position="0 1.8 0">
+			<a-cursor color="#2E3A87"></a-cursor>
+		</a-camera>
+	</a-scene>
+
+
+Adding a Background to the Scene
+
+Lastly, we can add a background to the scene using <a-sky>. The background can be a color, a 360 degree image, or even a 360 degree video. This is created by creating a sphere that wraps the scene:
+
+	<a-scene>
+		<a-assets>
+			<img id="texture" scr="texture.png">
+		</a-assets>
+		<a-box color="#FFF"
+				width="4"
+				height="10"
+				depth="2"
+				position="-10 2 -5"
+				rotation="0 0 45"
+				scale="2 0.5 3"
+				scr="#texture">
+			<a-animation attribute="rotation" begin="click" repeat="indefinite" to="0 360 0"></a-animation>
+		</a-box>
+		<a-light type="spot" color="#333" position="-20 0 0" look-at="a-box"></a-light>
+		<a-light type="point" color="#AAA" position="-0 5 0"></a-light>
+		<!-- Background -->
+		<a-sky color="#73F7DD"></a-sky>
+		<a-camera position="0 1.8 0">
+			<a-cursor color="#2E3A87"></a-cursor>
+		</a-camera>
+	</a-scene>
+
+And this is a very basic scene that places static objects in a 3D space using HTML. A good VR experience requires rich interaction and dynamic behavior. With the help of using and writing A-Frame components, we can build a more advanced scene.
 
