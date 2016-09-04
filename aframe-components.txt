@@ -67,3 +67,168 @@ We have predefined:
 
 
 Using Standard Components
+
+Standard components are components that ship with A-Frame, like a standard library. We'll go overML.
+
+We want to add an image texture to <a-plane> link using the material component.
+
+The material component is a multi-property component. To attach the material component to the plane, we set the component name as an HTML attribute.
+
+	<a-plane class="link" height="1" width="1" material></a-plane>
+
+Then we specify the component data using a syntax that looks like inline CSS styles. We set shader to flat so the image isn't affected negatively by lighting. And we set src to #cubes-thumb, a selector to one of the image defined in the asset management system.
+
+	<a-plane class="link"
+				height="1"
+				width="1"
+				material="shader: flat; scr: #cubes-thumb">				
+	</a-plane>
+
+Let's attach one more standard component, the sound component. We want to make it such that when we click (via gazing) on the link, it plays a click sound. The syntax is the same as just before, but now we are using the sound components properties. We set on to click so the sound is played on click. And we set src to #click-sound, a selectetor to ur <audio> element.
+
+	<a-plane class="link"
+				height="1"a
+				width="1"
+				material="shader: flat; scr: #cubes-thumb"
+				sound="on: click; src: #click-sound">
+	</a-plane>
+
+Now we have a textured plane that plays a click sound when clicked.
+
+
+Using Third-Party Components
+
+We can grab third-party components from the ecosystem, drop them into our scene, and use them from HTML. Components can do anything. By using components that other people have developed, we gain tons of power without needing to write our own code.
+
+We'll go through using three such third-party components: template, layout, and event-set. First we have to included them. [k-frame][k-frame] is a componenet pack by an A-Frame core developer that conveniently includes three of these components in one bundle.
+
+To drop in K-Frame, we can download from its [dist folder][kdist] and include it in the <head> after A-Frame.
+
+	<html>
+		<head>
+			<title>360 Image Browser</title>
+			<script type="text/javascript" scr="lib/aframe.min.js"></script>
+			<script type="text/javascript" scr="lib/k-frame.min.js"></script>
+		</head>
+		<body>
+			<a-scene>
+				<!-- VR Code -->
+			</a-scene>
+		</body>
+	</html>
+
+
+Template Component
+
+Currently, we have one link. We want to create three of them, on for each of aour 360-degree images.
+
+The template component integrates templating engines into A-Frame. This lets us do things such as encapsulate groups of entities, passing data to generate entities, or iteration. Since we want to turn one link into three, without copy-and-pasting HTML, we can use the template component.
+
+<!-- This is essentially what Jade, Pug allows -->
+
+If we read the template component's documentation, we see one way to define a template is via a script tag in <a-assets>. Let's make our link a template and give it a name via id:
+
+	<a-assets>
+		<!-- ... -->
+		<script id="link">
+			<a-plane class="link"
+				height="1"
+				width="1"
+				material="shader: flat; scr: #cubes-thumb"		
+				sound="on: click; src: #click-sound">		
+			</a-plane>
+		</script>
+	</a-assets>
+
+Then we can use our template to create multiple lines without much work:
+
+	<a-entity template="scr: #plane"></a-entity>
+	<a-entity template="scr: #plane"></a-entity>
+	<a-entity template="scr: #plane"></a-entity>
+
+But then they'll all be displaying the same image texture and look the same. Here is where we'll need a template engine with variable sustitution/interpolation.
+
+Let's tell the template component to use the popular Nunjucks engine by specifying <script type="text/nunjucks">. The component will lazy-load the template engine for us and with Nunjucks, we define a variable in the template, which we can pass using the data attributes:
+
+<!-- I'd rather use Jade (Pug) for my demo, as this is what I am comfortable with and my build system is set up to handle-->
+
+	<a-assets>
+		<!-- ... -->
+		<!-- Specify Nunjucks -->
+		<script id="link" type="text/nunjucks">
+			<a-plane class="link"
+				height="1"
+				width="1"
+				material="shader: flat; scr: {{ thumb }}"		
+				sound="on: click; src: #click-sound">		
+			</a-plane>
+		</script>
+	</a-assets>
+	<!-- ... -->
+	<!-- Pass image sources to the template -->
+	<a-entity template="scr: #plane" data-thumb="#city-thumb"></a-entity>
+	<a-entity template="scr: #plane" data-thumb="#cubes-thumb"></a-entity>
+	<a-entity template="scr: #plane" data-thumb="#sechelt-thumb"></a-entity>
+
+The template component allows us to keep out scene clean by not having to repeat verbose code.
+
+
+Layout Component
+
+Because the default position of an entity is 0 0 0, the entities will overlap. While we could manually position each link, we could use the layout component to do it for us. The layout component will automatically position its children to the specified layout.
+
+We create a wrapped entity around our links and attach the layout component using the line layout:
+
+	<a-entity id="links" layout="layout: line; margin: 0.75" position="-3 -1 -4">
+		<a-entity template="scr: #plane" data-thumb="#city-thumb"></a-entity>
+		<a-entity template="scr: #plane" data-thumb="#cubes-thumb"></a-entity>
+		<a-entity template="scr: #plane" data-thumb="#sechelt-thumb"></a-entity>
+	</a-entity>
+
+Now our links are no longer overlapping without us having to calculate and fiddle with positions. Think of it as  group.
+
+
+Event-Set Component
+
+Lastly, we'll add some visual feedback to our links. We want them to scale up and scale back when they are hovered or clicked. This involves writing an event listener to do setAttributes on the scale component in response to cursor events. This is a fairly common pattern so there is an event-set component that does setAttribute in response to events.
+
+Let's attach event listeners on our links to scale them up when they are gazed over, scale them down as they are being clicked, and scale them back when they are no longer gazed upon. we are mimicking CSS hover states. We can specify event names with _event properties, and the rest of the properties define the setAttribute calls. Nope that the event-set component can have multiple instances.
+
+	<a-assets>
+		<!-- ... -->
+		<script id="link" type="text/nunjucks">
+			<a-plane class="link" height="1" width="1"
+				material="shader: flat; scr: {{ thumb }}"		
+				sound="on: click; src: #click-sound"		
+				event-set__1="_event: mousedown; scale: 1 1 1"
+				event-set__2="_event: mouseup; scale: 1.2 1.2 1"
+				event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
+				event-set__4="_event: mouseleave; scale: 1 1 1">
+			</a-plane>
+
+		</script>
+
+Wielding components, we were able to do a lot with just a few more lines of HTML. Though the ecosystem has a lot to offer you, your scenes will often require writing your own simple components.
+
+
+Writing Components
+
+The component documentation has detailed information on writing a component. The most basic component takes the form of:
+
+	AFRAME.registerComponent('component-name', {
+		// Define component properties
+		schema: {},
+		/**
+		 * Run when component is attached.
+		 * @member {Element} el - Entity.
+		 * @member data - Component data.
+		 */
+	 	init: function() {
+	 		// Do stuff using 'this.el' and 'this.data'/
+	 	}
+	});
+
+
+	Update Raycaster Component
+
+	
