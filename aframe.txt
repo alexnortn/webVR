@@ -121,8 +121,29 @@ Performance is critical in VR. A high framerate muse be maintained in order for 
 
 
 
+---
+Build with Basic HTML
+
+Let's first start building a scene using the basic primitive HTML building blocks.
 
 
+Adding a Box
 
+A Hello World scene is a scene with a box:
+
+	<a-scene>
+		<a-box color="#6173F4" width="4" height="10" depth="2"></a-box>
+	</a-scene>
+
+Juse like with regular HTML elements, we can configuge the element by setting HTML attributes. Here, we define color, width, height, depth of <a-box>. See the <a-box> documentation to see the available attributues.
+
+For flat displays, the default control scheme lets us look around by click-dragging the mouse and move with the WASD keys. Upon entering VR, the default control scheme lets us look around with a VR headset and, if room scale is possible, literally walk around.
+
+
+Transforming the Box
+
+A-Frame uses a right-handed coordinate system
+
+	+  
 
 
