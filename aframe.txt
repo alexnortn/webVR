@@ -144,6 +144,25 @@ Transforming the Box
 
 A-Frame uses a right-handed coordinate system
 
-	+  
+	+ Positive X-axis is "right"
+	+ Positive Y-axis is "up"
+	+ Positive Z-axis is pointing out of the screen towards us
+
+The basic distance unit is defined in meters. When designing a scene for VR, it is important to consider the real world scale of the objects we create. A box with height="100" may be fine on our computer screens, but in VR it will look massive.
+
+The basic rotational unit is defined in degrees. To determine the positive direction of rotation, use the right-hand rule. Point our thumbs down the direction of a positive axis, and the direction which our fingers curl around the positive direction of rotation.
+
+To translate, rotater, and scale the box, we can configure the position, rotation, and scale components.
+
+	<a-scene>
+		<a-box color="#6173F4"
+				width="4"
+				height="10"
+				depth="2"
+				position="-10 2 -5"
+				rotation="0 0 45"
+				scale="2 0.5 3">
+		</a-box>
+    </a-scene>
 
 
