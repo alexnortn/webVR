@@ -66,7 +66,63 @@ Developers can modularize three.js and Javascript code within A-Frame components
 Getting Started with A-Frame
 
 
-Simply include a reference to A-Frame in your document head
+	+ Simply include a reference to A-Frame in your document head
+	+ Or install + require with Browserify via NPM
+
+
+Device & Platform Support
+
+Devices and platform support depends on how well the browsers support certain devices and APIs. A-Frame supports both flat (3D on a normal screen) and WebVR experiences, though its focus is heavily VR. We will break up support into two categories: flat and VR.
+
+	+ Support for flat devices depends on a browsers support for WebGL
+	+ Support for VR experience depends on a browsers suport for WebGL and support for the WebVR API. A-Frame supports version 1.0 of the WebVR API.
+	+ The Exception to this is for mobile deices, which are supported through the WebVR Pollyfill.
+
+
+Support for Controllers
+
+	+ A-Frame currently supports 6DOF controllers using Brandon Jones experimental build of Chromium with experimental controller support (e.g., Vive Controllers).
+
+
+Harward Specificiations
+
+	+ Desktop is pretty intense
+	+ For mobile, we recommend at least an iPhone 6 for iOS and a least a Galaxy S6 for Android.
+
+
+
+Best Practices
+
+Designing for VR is different than designing for flat experiences. As a new medium, there are a new sets of best practices to follow, especially to maintain user comfort and presence. This has been thoroughly wirtten about so we defer to these comprehensive guides.
+
+	+ Oculus Best Practices (for VR)
+	+ Leap Motion VR Best Practices Guidelines
+
+Some things to note:
+
+	+ The common golden rule is to never unexpectadly take control of the camera away from users.
+	+ Units (such as for position) should be considered meters. This is beeause the WebVR API returns pose in meteres which is fed into most camera controls. By considering units as meters, we achieve expected scale.
+
+
+Performance
+
+Performance is critical in VR. A high framerate muse be maintained in order for users to be comfortable. Here are some way sto help improce performance of an A-Frame scene.
+
+	+ Use recommended hardward spec
+	+ Use the stats component to keep an eye on various metrics (FPS, vertex and face count, geometry and material count, draw calls, number of entities).
+	+ We want to maximize FPS and minimize everything else.
+	+ Make use of the asset management system to benifit from browser caching and preloading. Trying to fetch assets while rendering is slower than fetching all assets before rendering.
+	+ Look to make use of geometry merging to limit draw calls when multiple geometries are sharing the same material.
+	+ If using models, look to bake your lights into textures rather than relying on realtime lighting and shadows.
+	+ Generally, the fewer number of entities and lights in the scene, the better.
+	+ Make sure your textures' resolutions are sized to powers of two (256, 512, 1024).
+	+ DRY
+	+ Mixins & Templating
+
+
+
+
+
 
 
 
