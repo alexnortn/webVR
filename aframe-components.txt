@@ -229,6 +229,42 @@ The component documentation has detailed information on writing a component. The
 	});
 
 
-	Update Raycaster Component
+Update Raycaster Component
 
-	
+First, let us whitelist the entities that the cursor's raycaster is checking for intersections against. That way, the cursor will only click if something can be clicked, and it is also better for performance. The cursor is built on top of the raycaster component, and we can configure the raycaster. We update the raycaster component's objects property which takes a selector:
+
+	<a-cursor id="cursor" raycaster="objects: .link"></a-cursor>
+
+This list will be populated once the raycaster component attaches. Unfortunatly since the links are templated, they won't be found at that time. What we can do is write a component that refreshes our raycaster when the link attaches. Here will be the skeleton of our component:
+
+	AFRAME.registerComponent('update-raycaster', {
+		schema: {
+			// ...
+		},
+		init: function() {
+			// ...
+		}
+	});
+
+First, we will fill out the schema so that we can pass in which raycaster to update. We make it a single-property schema that takes a selector such that we can simply do update-raycaster="#cursor":
+
+	AFRAME.registerComponent('update-raycaster', {
+		schema: {
+			type: 'selector'
+		},
+		init: function() {
+			// ...
+		}
+	});
+
+Then we use that data to actually update the raycaster in the init lifecylce method, which is called when the component is attached to the entity. We grab the raycaster and update it.
+
+		AFRAME.registerComponent('update-raycaster', {
+			schema: {
+				type: 'selector'
+			},
+			init: function() {
+				var raycasterEl = this.data;
+				this.data.components.raycaster.refreshObjects();
+			}
+		});	
