@@ -107,8 +107,8 @@ To drop in K-Frame, we can download from its [dist folder][kdist] and include it
 	<html>
 		<head>
 			<title>360 Image Browser</title>
-			<script type="text/javascript" scr="lib/aframe.min.js"></script>
-			<script type="text/javascript" scr="lib/k-frame.min.js"></script>
+			<script type="text/javascript" src="lib/aframe.min.js"></script>
+			<script type="text/javascript" src="lib/k-frame.min.js"></script>
 		</head>
 		<body>
 			<a-scene>
@@ -267,4 +267,73 @@ Then we use that data to actually update the raycaster in the init lifecylce met
 				var raycasterEl = this.data;
 				this.data.components.raycaster.refreshObjects();
 			}
-		});	
+		});
+
+
+Set-Image Component
+
+Finally, we write the component that fades the sky into a new 360-degree iamge once one of the links are clicked. Here is the skeleton for our set-image component.
+
+	AFRAME.registerComponent('set-image', {
+		schema: {
+			// ...
+		},
+		init: function() {
+			// ...
+		}
+	});
+
+Now we decide what the API for our image-settng component will be. We need:
+
+	+ An event name to listen to.
+	+ Which entity to change the texture of.
+	+ The image texture.
+	+ An animation to fade duration.
+
+So we translate those properties to the schema:
+
+	AFRAME.registerComponent('set-image', {
+		schema: {
+			on: {type 'string'},
+			target: {type: 'selector'},
+			src: {type: 'string'},
+			dur: {type: 'number, default: 300'}
+		},
+		init: function() {
+			// ...
+		},
+		setupFadeAnimation: function() {
+			// Appends an <a-animation> that fades to black
+		}
+	});
+
+Now we set up the event listener to change the image while the texture has faded to black. Whenever the event it emitted (in our case, a click), then the component will trigger the animation (which is listening for set-image-fade), wait the appropriate amount of time, and swap the image:
+
+	AFRAME.registerComponent('set-image', {
+		schema: {
+			on: {type 'string'},
+			target: {type: 'selector'},
+			src: {type: 'string'},
+			dur: {type: 'number, default: 300'}
+		},
+		init: function() {
+			var data = this.data;
+			var el = this.el;
+			this.setupFadeAnimation();
+
+			el.addEventListener(data.on, function() {
+				// Fadeout Image
+				data.target.emit('set-image-fade');
+				// Wait for the fade to complete
+				setTimeout(function() {
+					// Set image
+					data.target.setAttribute('material', 'src', data.src);
+				}, data.dur);
+			});
+		},
+		setupFadeAnimation: function() {
+			// Appends an <a-animation> that fades to black
+		}
+	});
+
+That concludes our 360-dgre
