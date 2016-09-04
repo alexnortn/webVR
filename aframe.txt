@@ -165,4 +165,43 @@ To translate, rotater, and scale the box, we can configure the position, rotatio
 		</a-box>
     </a-scene>
 
+The example above (assuming we are positioned on the origin looking down the negative Z-axis) will translate the box left/up/back, rotate the box to the right, stretches the box left-and-right and back-and-front, and shrinks the box up-and-down.
+
+
+Applying a Texture to the Box
+
+We can apply an image texture to the box with an image or video using the src attribute. To make sure the color does not mix with the texture, we set the back color to white.
+
+	<a-scene>
+		<a-box color="#FFF"
+				width="4"
+				height="10"
+				depth="2"
+				position="-10 2 -5"
+				rotation="0 0 45"
+				scale="2 0.5 3"
+				scr="texture.png">
+		</a-box>
+	</a-scene>
+
+It is desirable to cache the texture and block the scene from rendering until the texture is loaded. We can move the texture into the asset management system. We define it as an <img> tag, give it an ID, and point to it using a selector.
+		
+	<a-scene>
+		<a-assets>
+			<img id="texture" scr="texture.png">
+		</a-assets>
+		<a-box color="#FFF"
+				width="4"
+				height="10"
+				depth="2"
+				position="-10 2 -5"
+				rotation="0 0 45"
+				scale="2 0.5 3"
+				scr="#texture">
+		</a-box>
+	</a-scene>
+
+
+Animating the Box
+
 
