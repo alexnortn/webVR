@@ -791,6 +791,162 @@ Cursor
 			We should probably set up the "clickable" class but not go too far into the raycaster technical details. Simply explaining it with a simple interactive scene should do nicely.
 
 
+		Rotation
+
+			The rotation component defines the orientation of an entity. It takes the roll (x), pitch (y), and yaw (z) as three space-delimited numbers indicating degrees of rotation.
+
+			All entities inherently have the rotation component.
+
+			<a-entity rotation="45 90 180"></a-entity>
+
+
+			Value
+
+			A-Frame uses a right-handed coordinate system. When aligning our right hand’s thumb with a positive axis, our hand will curl in the positive direction of rotation.
+
+				+ x - Roll,  rotation about the X-axis | 0
+				+ y - Pitch, rotation about the Y-axis | 0
+				+ Z - Yaw,   rotation about the Z-axis | 0
+
+
+			Relative Rotation
+
+			World-space rotations of child entities are inherited from parent entities. Consider this scene:
+
+			<a-entity id="parent" rotation="0 45 0">
+				<a-entity id="child-1"></a-entity>
+				<a-entity id="child-2" rotation="15 45 30"></a-entity>
+			</a-entity>
+
+			The world-space rotation of #child1 would be 0 45 0 as inherited by the entity. In the local parent’s space, #child1‘s rotation would be seen as 0 0 0.
+
+			The world-space rotation of #child2 would be 15 90 30, by combining the rotation with the parent entity. In the parent’s local space, #child2‘s rotation would be seen as 15 45 30.
+
+			---
+			Rotation deserves a slide --> Transformations deserve a quick segment
+
+
+		Scale
+
+			The scale component defines a shrinking, stretching, or skewing transformation of an entity. It takes three scaling factors for the X, Y, and Z axes.
+
+			All entities inherently have the scale component.
+
+			The example below shrinks the entity in half along the X direction, maintains the same scale factor along the Y direction, and stretches the entity by two-fold along the Z-direction:
+
+			<a-entity scale="0.5 1 2"></a-entity>
+
+
+			Value
+
+			A-Frame uses a right-handed coordinate system. When aligning our right hand’s thumb with a positive axis, our hand will curl in the positive direction of rotation.
+
+			If any of the scaling factors are set to 0, then A-Frame will assign instead an extremely small value such that things don’t break.
+
+				+ x | 1
+				+ y | 1
+				+ z | 1
+
+
+			Reflection
+
+			Scaling factors can be negative, which results in a reflection.
+
+			A notable use for this is for sky spheres. Sky spheres contain the entire scene and have a texture mapped on the interior surface. To accomplish this, we can reflect, or invert, the sphere in the Z-direction.
+
+			<a-entity geometry="primitive: sphere; radius: 1000"
+          			  material="src: sky.png"
+          			  scale="1 1 -1">
+          	</a-entity>
+
+          	---
+			Scale deserves a slide --> Transformations deserve a quick segment
+
+
+		Sound
+
+			The sound component defines the entity as a source of sound or audio. The sound component is positional and is therefore affected by the components-position.
+
+			<a-entity id="river" geometry="primitive: plane" 
+								 material="color: blue"
+          						 position="-10 0 0" 
+          						 sound="src: url(river.mp3); autoplay: true">
+          	</a-entity>
+
+
+          	Properties
+
+          		+ autoplay | false
+          		+ on - An event to for the entity to listen before playing the sound | null
+          		+ loop | false
+          		+ src | null
+          		+ volume | 1
+
+
+      		Events
+
+      			+ sound-ended
+
+
+  			Playing on an Event
+
+  			The sound component can also listen to an event before playing as well. For example, we might have a laughing sound play every time a monster is clicked:
+
+			<a-entity cursor position="0 0 -5"></a-entity>
+			<a-entity id="elmo" geometry="primitive: box" 
+								material="src: elmo.png"
+								sound="src: url(ticklelaugh.mp3); on: click"> <!-- multi-prop -->
+			</a-entity>
+
+
+			Preloading a Sound Asset
+
+			For performance, it is recommended to block the scene on the sound asset to preload and cache. We can do so through the asset management system:
+
+			<a-scene>
+			  <a-assets>
+			    <audio id="river" src="river.mp3">
+			  </a-assets>
+			  <a-entity sound="src: #river"></a-entity>
+			</a-scene>
+
+
+			Pause and Resume
+
+			To programmatically pause or resume a playing sound, we can tell the entity to pause or resume:
+
+			<script type="text/javascript">
+				
+				var entity = document.querySelector('[sound]');
+				entity.pause();
+
+			</script>
+
+			Or to pause only the sound:
+
+			<script type="text/javascript">
+				
+				entity.components.sound.pause();
+
+			</script>
+
+			Then call .play() on either the entity or the sound component to resume.
+
+			---
+			Sound is definitely useful, why not add a bit of interaction Though, given that this is a Cardboard project, maybe sound is not necessary. Let's put sound at the end of the list.
+
+
+		
+
+
+
+
+
+
+
+
+
+
 
 			
 
