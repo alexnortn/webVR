@@ -1,0 +1,186 @@
+
+
+
+
+
+Alex Norton
+2016
+-
+
+
+Component
+
+In the entity-component-system pattern, a component is a reusable and modular chunk of data that is plugged into an entity to add appearance, behavior, and/or functionality.
+
+In A-Frame, components modify entities which are 3D objects in the scene. We mix and compose components together to build complex objects. They let us encapsulare three.js and Javascript code into modules that can be used declaratively from HTML.
+
+As an abstract analogy, if a smartphone were defined as an entity, we might use components to give it appearance (color, shape), to define its behavior (vibrate when called, shut down on low battery), or add functionality (camera, screen).
+
+Components are roughly analogous to CSS. Like how CSS rules modify the appearnace of elements, component properties modify the appearnace, behavior and functionality of entities.
+
+	+ Entities    --> DOM elements
+	+ Componenets --> CSS rules
+
+
+What a Component Looks Like
+
+A component holds a bucket of data in the form of one or more component properties. This data is used to modify the entity. Consider an engine component, we might define properties such as horsepower or cylinders.
+
+	+ Entity is abstract thing realized by the components attached to it.
+
+
+From HTML
+
+HTML attributes represent component names and the value of thsoe attributes represent component data.
+
+Single-Property Component
+
+If a component is a single-property component, meaning its data is represented by a single value, then in HTML, the component value looks like a normal HTML attribute:
+
+	<!-- 'position' is the name of the position component. -->
+	<!-- '1 2 3' is the data of the position component. -->
+	<a-entity position="1 2 3"></a-entity>
+
+
+Multi-Property Component 
+
+If a component is a Multi-Property component, meaning itsdata is represented by several properties and values, then in HTML the component value looks like inline CSS styles:
+
+	<!-- `light` is the name of the light component. -->
+	<!-- The `type` property of the light is set to `point`. -->
+	<!-- The `color` property of the light is set to `crimson`. -->
+	<a-entity light="type: point; color: crimson"></a-entity>
+
+
+Under the Hood
+
+A component is registered using AFRAME.registerComponent, which we pass a component name to reigster a component under and a component definition. Below is the outer skeleton for the position component:
+
+	AFRAME.registerComponent('position', {
+	  // ...
+	});
+
+A component defines a schema that defines its properties, giving anatomy to the component. The position component takes a flat vec3, or and {x, y, z} object.
+
+	<script type="text/javascript">
+
+		AFRAME.registerComponent('position', {
+		  schema: { type: 'vec3' },
+		  // ...
+		});
+
+	</script>
+
+Then a component defines lifecycle methods that handles what it does with its data, giving physiology to the component. During initialization and on attribute updates, the position component takes its vec3 value and appies it to its three.js Object3D.
+
+Components will often be talking to the three.js API.
+
+	<script type="text/javascript">
+
+		AFRAME.registerComponent('position', {
+		  schema: { type: 'vec3' },
+		  update: function () {
+		    var object3D = this.el.object3D;
+		    var data = this.data;
+		    object3D.position.set(data.x, data.y, data.z);
+		  }
+		});
+
+	</script>
+
+The position component uses only a small subset of the component API. We'll go over everything the component API has to offer.
+
+
+Components Have Methods
+
+	+ Init: Called once when the component is initialized. Used to set up initial state and instantiate variables.
+	+ Update: Called both hen the component is initialized and whenever the component's data changes.
+	+ Remove
+	+ Tick: Called on each render loop or tick of the scene. Used for continous changes.
+	+ Play
+	+ Pause
+	+ UpdateSchema: Called on every update. Can be used to dynamically modify the schema.
+
+
+Components Have Dependencies
+
+Specifying dependencies will guarantee that another component or other components are initialized before initializing the current component.
+
+	<script type="text/javascript">
+
+		// Initializes last.
+		AFRAME.registerComponent('a', {
+		  dependencies: ['b']
+		});
+		// Initializes second.
+		AFRAME.registerComponent('b', {
+		  dependencies: ['c']
+		});
+		// Initializes first.
+		AFRAME.registerComponent('c', {});
+
+	</script>
+
+
+Schema
+
+A component's schema defines and describes the property or properties it takes. A component can either be a single-property component (one flat value) or a multi-property component (multiple named values).
+
+A single-property schema might look like:
+
+	<script type="text/javascript">
+
+		schema: {
+		  type: 'int', default: 5
+		}
+
+	</script>
+
+A multi-property schema might look like:
+
+	<script type="text/javascript">
+
+		schema: {
+		  color: { default: '#FFF' },
+		  target: { type: 'selector' },
+		  uv: {
+		    default: '1 1',
+		    parse: function (value) {
+		      return value.split(' ').map(parseFloat);
+		    }
+		  },
+		}
+
+	</script>
+
+
+Property Types
+
+All properties have property types. Property types define how the component parses incoming data from the DOM, and they prescribe a default value if one is not defined in the property definition.
+
+
+Schema Inference
+
+Property types can either be assigned explicitly, or the schema will infer one given the default value.
+
+Given a default value, the schema will infer a property type and inject a parser and stringifier into the property definition:
+
+	<script type="text/javascript">
+
+		schema: {
+		  default: 32
+		}
+
+		// Will process to:
+		schema: {
+		  default: 32,
+		  type: 'number',
+		  parse: function numberParse (value) {
+		    return parseFloat(value);
+		  },
+		  stringify: function defaultStringify (value) {
+		    return value.toString();
+		  }
+		}
+
+	</script>
