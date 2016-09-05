@@ -8,129 +8,227 @@ Alex Norton
 -
 
 
-Primitives
+Selected Primitives
 
-Introduction
+<a-box>
 
-	Primitives are entities that:
-
-		+ Have a semantic name (e.g., <a-box>)
-		+ Have a preset assemblage of components
-		+ Have default component property values
-		+ Map HTML attributes to component properties
-	
-	They are a convenience layer on top of the core API and are meant to:
-
-		+ Pre-compose useful components together with prescribed defaults
-		+ Act as a shorthand for complex-but-common types of entities
-		  (e.g., <a-sky>)
-		+ Provide a familiar interface with HTML attributes mapping to only a single value
-
-	They are sort of like Prefabs in Unity. Some literature on the entity-component-system pattern refer to these as assemblages.
-
-
-Here is an assortment of various primitives in use:
-
-	<a-scene>
-		<!-- Using the asset management system for caching. -->
+	The box primitive, formerly called <a-cube>, creates shapes such as boxes, cubes, or walls. It is an entity that prescribes the geometry with its geometric primitive set to box.
+		
 		<a-assets>
-			<a-asset-item id="fox-obj" src="fox.obj"></a-asset-item>
-			<a-asset-item id="fox-mtl" src="fox.mtl"></a-asset-item>
 			<img id="texture" src="texture.png">
-			<video id="video" src="video.mp4"></video>
 		</a-assets>
-		<a-camera fov="80"><a-cursor></a-cursor></a-camera>
-		<a-box src="#texture" depth="2" height="5" width="1"></a-box>
-		<a-image src="fireball.jpg"></a-image>
-		<a-video src="#video"></a-video>
-		<a-sky color="#432FA0"></a-sky>
-	</a-scene>
+		<!-- Basic box. -->
+		<a-box color="tomato" depth="2" height="4" width="0.5"></a-box>
+		<!-- Textured box. -->
+		<a-box src="#texture"></a-box>
 
 
-Primitives are Entities
+	Attributes
 
-Since every primitive extends <a-entity>, things that can be done with entities can be done with primitives:
-
-	+ Positioning, rotating, and scaling
-	+ Attaching components and mixins
-	+ Applying animations
-
-For example, let’s take <a-box> primitive, and say someone writes a third-party physics component. We can attach it to <a-box> just as we would with any entity:
-
-	<a-box color="red" physics="mass: 2.4"></a-box>
-
-
-How They Work
-
-To create a wide red box using the primitives API, we could write:
-
-	<a-box color="red" width="3"></a-box>
-
-Which ends up expanding to:
-
-	<a-box color="red" 
-		   width="3"
-		   geometry="primitive: box; width: 3" 
-		   material="color: red">
-	</a-box>
-
-Under the hood, we see that primitives extend <a-entity> as a custom element while providing some defaults. It defaults the geometry.primitive property to box. And it maps (i.e., proxies) the HTML width attribute to the underlying geometry.width property and the HTML color attribute to the underlying material.color property.
+		+ color - material.color | #fff
+		+ depth - geometry.depth | 1
+		+ height - geometry.height | 1
+		+ metalness - material.metalness 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.reapeat | None
+		+ roughness material.roughness | 0.5
+		+ segments-depth - geometry.segmentsDepth | 1
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentswidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
 
 
-Register a Primitive
+<a-camera>
 
-We can compose and register our own primitives for other people to consume.
-For example, here is what the registration looks like for <a-box> primitive:
+	The camera primitive places the user somewhere within the scene. It is an entity that prescribes the camera component with mappings to controls-related components.
 
-	<script type="text/javascript">
-		
-		var extendDeep = AFRAME.utils.extendDeep;
-		// The mesh mixin provides common material properties for creating mesh-based primitives.
-		// This makes the material component a default component and maps all the base material properties.
-		var meshMixin = AFRAME.primitives.getMeshMixin();
-		AFRAME.registerPrimitive('a-box', extend({}, meshMixin, {
-		  // Preset default components. These components and component properties will be attached to the entity out-of-the-box.
-		  defaultComponents: {
-		    geometry: {primitive: 'box'}
-		  },
-		  // Defined mappings from HTML attributes to component properties (using dots as delimiters). If we set `depth="5"` in HTML, then the primitive will automatically set `geometry="depth: 5"`.
-		  mappings: {
-		    depth: 'geometry.depth',
-		    height: 'geometry.height',
-		    width: 'geometry.width'
-		  }
-		}));
+		<a-scene>
+			<a-box></a-box>
+			<a-entity position="0 1.8 5"> <!-- This is sort of light a null in AFX -->
+				<a-camera></a-camera>
+			</a-entity>
+		</a-scene>
 
-	</script>
 
-For example, Don McCurdy’s aframe-extras creates <a-ocean> primitive using his ocean component:
+	Attributes
 
-	<script type="text/javascript">
-		
-		AFRAME.registerPrimitive('a-ocean', {
-		  // Attaches the ocean component by default.
-		  // And smartly makes the ocean parallel to the ground.
-		  defaultComponents: {
-		    ocean: {},
-		    rotation: {x: -90, y: 0, z: 0}
-		  },
-		  // Maps HTML attributes to his ocean component's properties.
-		  mappings: {
-		    width: 'ocean.width',
-		    depth: 'ocean.depth',
-		    density: 'ocean.density',
-		    color: 'ocean.color',
-		    opacity: 'ocean.opacity'
-		  }
-		});
+		+ far - camera.far | 10000
+		+ fov - camera.fov | 80
+		+ look-controls-enabled - look-controls.enabled | true
+		+ near - camera.near | 0.5
+		+ user-height - camera.userHeight | 0
+		+ wasd-controls-enabled - wasd-controls.enabled | true
 
-	</script>
 
-Then we’d be able to create oceans using basic HTML syntax with little configuration needed:
+	Manually Positioning the Camera
 
-	<a-ocean color="aqua" height="100" width="100"></a-ocean>
+	To position the camera, set the position on a wrapper <a-entity>. Don’t set the position directly on the camera primitive because controls will quickly override the set position:
 
----
-We should introduce the concept that Primitives are Entities but stay away from demonstrating extendibility. For now, mention this as a possibility.
+		<a-entity position="0 0 5">
+			<a-camera></a-camera>
+		</a-entity>
 
-The intro to the intro is quite useful.
+
+	Differences with the Default Camera
+
+	When we use the camera primitive, A-Frame will not prescribe a default camera.
+
+	Note the default camera is positioned at 0 1.6 0 whereas the camera primitive will be positioned at 0 0 0. In the example below, we would see a box:
+
+		<a-box></a-box>
+		<a-camera></a-camera>
+
+	Then both the cube and camera wll be positioned at 0 0 0, the camera will be inside the cube, and thus the box won’t be visible without moving the camera. So make sure the have the camera well-positioned.
+
+	---
+	Definitely explain a bit about the camera, potentially the default camera rig set up for stereoscopic rendering
+
+
+<a-circle>
+
+	The circle primitive creates circles surfaces using the geometry component with the type set to circle.
+
+		<a-scene>
+			<a-assets>
+				<img id="platform" src="platform.jpg">
+			</a-assets>
+			<!-- Basic circle. -->
+			<a-circle color="#CCC" radius="20"></a-circle>
+			<!-- Textured circle parallel to ground. -->
+			<a-circle src="#platform" radius="50" rotation="-90 0 0"></a-circle>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #fff
+		+ metalness - material.metalness 0
+		+ opacity - material.opacity | 1
+		+ radius - geometry.radius | 1
+		+ repeat - material.reapeat | None
+		+ roughness material.roughness | 0.5
+		+ segments - geometry.segments | 32
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | None
+
+
+	Parellelizing to the Ground
+
+	To make a circle parallel to the ground, rotate it around the X-axis:
+
+		<a-plane rotation="-90 0 0"></a-plane>
+
+
+	---
+	We probably can just sort of make a circle, we don't need to enumerate all the possibilities.
+
+
+<a-cone>
+
+	The cone primitive creates a cone shape. It is an entity that prescribes the geometry with its geometric primitive set to cone.
+
+		<a-assets>
+			<img id="texture" src="texture.png">
+		</a-assets>
+		<!-- Basic cone. -->
+		<a-cone color="tomato" radius-bottom="2" radius-top="0.5"></a-cone>
+		<!-- Textured box. -->
+		<a-cone src="#texture"></a-cone>
+
+
+	Attributes
+
+		color - material.colo | #FFF
+		height - geometry.height | 1
+		metalness - material.metalness | 0
+		opacity	- material.opacity | 1
+		open-ended - geometry.openEnded	| false
+		radius-bottom - geometry.radiusBottom | 1
+		radius-top - geometry.radiusTop	| 0.8
+		repeat - material.repeat | None
+		roughness - material.roughness | 0.5
+		segments-height	- geometry.segmentsHeight | 18
+		segments-radial	- geometry.segmentsRadial | 36
+		shader - material.shader | standard
+		side - material.side | front
+		src	- material.src | None
+		theta-length - geometry.thetaLength	| 360
+		theta-start	- geometry.thetaStart | 0
+		transparent	- material.transparent | false
+
+
+	---
+	We probably can just sort of make a cone, we don't need to enumerate all the possibilities.
+
+
+<a-cursor>
+
+	The cursor primitive places a reticle or crosshair to add clicking and interactivity with the scene. It is an entity that prescribes the cursor component and a default ring-shaped geometry. The cursor is usually placed as a child of the camera.
+
+	Read the cursor component documentation for detailed information about how the cursor works and how to use the cursor.
+
+		<a-scene>
+			<a-camera>
+				<a-cursor></a-cursor>
+			</a-camera>
+			<a-box></a-box>
+		</a-scene>
+
+
+	Attributes
+
+		+ fuse - cursor.fuse | false
+		+ max-distance - cursor.maxDistance | 1000
+		+ timeout - cursor.timeout | 1500
+
+
+	---
+	Need to figure out how to explain components vs primitives
+
+
+<a-curved-image>
+
+	The curved image primitive creates images that bend around the user. Curved images arranged around the camera can be pleasing for legibility since each pixel sits at the same distance from the user. They can be a better choice than angled flat planes for complex layouts because they ensure a smooth surface rather than a series of awkward seams between planes. It is an entity that prescribes a double-sided open-ended cylinder with the geometry component and rendering textures on the inside of the cylinder with the material component.
+
+		<a-scene>
+			<a-assets>
+				<img id="my-image" src="image.png">
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-curvedimage src="#my-image" height="3.0" radius="5.7" theta-length="72"
+						   rotation="0 100 0" scale="0.8 0.8 0.8"></a-curvedimage>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-curvedimage src="another-image.png"></a-curved-image>
+		</a-scene>
+
+
+	Attributes
+
+		color - material.color | #FFF
+		height - geometry.height | 1
+		metalness - material.metalness | 0
+		opacity - material.opacity | 1
+		open-ended - geometry.openEnded | false
+		radius - geometry.radius | 1
+		repeat - material.repeat | None
+		roughness	material - roughness	0 | 5
+		segments-height - geometry.segmentsHeight | 18
+		segments-radial - geometry.segmentsRadial | 36
+		shader - material.shader | standard
+		side - material.side | front
+		src - material.src | None
+		theta-length - geometry.thetaLength | 360
+		theta-start - geometry.thetaStart | 0
+		transparent - material.transparent | false
+
+
+
+
