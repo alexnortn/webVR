@@ -17,25 +17,29 @@
 	<!-- Scene is HTML goes in the body -->
 	<a-scene>
 
-		<!-- Camera with customized cursor -->
-		<a-entity camera>
+		<!--  Scene geometry -->
+		<a-sphere position="0 1.25 -1" radius="1.25" color="#EF2D5E"></a-sphere>
+		<a-box position="-1 0.5 1" rotation="0 45 0" width="1" height="1" depth="1"  color="#4CC3D9"></a-box>
+		<a-cylinder position="1 0.75 1" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+		<a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+		<!-- Sky space -->
+		<a-sky color="#ECECEC"></a-sky>
+
+		<!-- Camera Controls -->
+		<a-entity camera look-controls position="0 1.8 5"> <!-- userHeight ~ 1.8m --> 
 			<a-entity cursor="fuse: true; fuseTimeout: 500"
-					  position="0 0 -5"
-					  geometry="primitive: ring; radiusInner: 0.1; radiusOuter: 0.15"
-					  material="color: black; shader: flat">
-			  	<a-animation begin="click" easing="ease-in" attribute="scale"
+					  position="0 0 -0.25"
+					  geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015"
+					  material="color: black; shader: flat"
+					  click-color-change>
+			  	<a-animation begin="click" easing="ease-in" attribute="scale" dur="250"
                				 fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
-  				<a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+  				<a-animation begin="cursor-fusing" easing="ease-in" attribute="scale" dur="250"
                				 fill="forwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
 			</a-entity>
 		</a-entity>
-		<a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity>
 
-		<a-light color="#da47da" position="0 5 0" type="ambient"></a-light>
-		<a-entity camera look-controls wasd-controls></a-entity>
-		<a-entity light="type: point; color: #EEE; intensity: 0.5" position="0 3 0"></a-entity>
-		<!-- Sky -->
-		<a-sky color="#c8f8e0"></a-sky>
 	</a-scene>
 
 	<script>
@@ -51,23 +55,7 @@
 		  }
 		});
 
-		// Upon entering VR, go fullscreen
-		element.addEventListener('click', fullscreen, false);
+		var scene = document.querySelector('a-scene'); // Get the scene
 
-		// Fullscreen, dismiss pesky headers on mobile
-		function fullscreen() {
-			if (container.requestFullscreen) {
-				container.requestFullscreen();
-			} 
-			else if (container.msRequestFullscreen) {
-				container.msRequestFullscreen();
-			} 
-			else if (container.mozRequestFullScreen) {
-				container.mozRequestFullScreen();
-			}
-			else if (container.webkitRequestFullscreen) {
-				container.webkitRequestFullscreen();
-			}
-		}
 	</script>
 </body>
