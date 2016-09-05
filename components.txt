@@ -440,6 +440,203 @@ Cursor
   				+ target - Element the spot should point to. Set to null to transfrom spotlight by orientation, pointing to it's -Z axis.
 
 
+		Look-Controls
+
+			The look-controls component defines the following behavior of an entity. The look-controls component acts upon the HMD headset, mouse, and touchscreen inputs. A-Frame standard controls are grouped together based upon configuration and behavior rather than by individual input methods:
+
+				+ Rotate when the head-mounted display (HMD) is rotated.
+				+ Rotate when the mouse is clicked and dragged.
+				+ Rotate when the touchscreen is tapped and dragged.
+
+			
+			Example
+
+			The look-controls component is usually used alongside the [camera component] [components-camera].
+
+			<a-entity camera look-controls></a-entity>
+
+
+			Properties
+
+				+ enabled - Whether look controls are enabled | true
+
+
+			Caveats
+
+			If you want to create your own component for look controls, you will have to copy and paste the HMD-tracking bits into your component. In the future, we may have a system for people to more easily implement their controls.
+
+
+		Material
+
+			The material component gives appearance to an entity. We can define properties such as color, opacity, or texture. This is often paired with the geometry component which provides shape.
+
+			Custom materials and shaders can be registered to extend the material component in order to provide a wide range of visual effects.
+
+
+			Example
+
+			Defining a red material using the default standard material:
+
+				<a-entity geometry="primitive: box" 
+						  material="color: red">
+				</a-entity>
+
+			Here is an example of using a different material:
+
+				<a-entity geometry="primitive: box" 
+						  material="shader: flat; color: red">
+				</a-entity>
+
+			Here is an example of using an example custom material:
+
+				<a-entity geometry="primitive: plane"
+          				  material="shader: ocean; color: blue; wave-height: 10">
+          		</a-entity>
+
+
+      		Properties
+
+      		The material component has a few base properties. More properties will be available depending on the material applied.
+
+      			+ depthTest   - Whether depth testing is enabled when rendering the material | true
+      			+ flatShading - Use THREE.FlatShading rather than THREE.StandardShading | true
+      			+ opacity     - Extent of transparency. If the transparent property is not true, then the material will remain opaque and opacity will only affect color | 1.0
+      			+ shader      - Which material to use. Defaults to the standard material. Can be set to the flat material or to a registered custom material. | standard
+      			+ side        - Which sides of the mesh to render. Can be front, back, or double | front
+      			+ visible     - whether material is visible. Raycasters will ignore invisible materials | true.
+
+
+  			Events
+
+  				+ materialtextureloaded
+  				+ materialvideoended
+
+
+			Built-In Materials
+
+			A-Frame ships with a few built-in materials.
+
+				standard
+
+				The standard material is the default material. It uses the physically-based THREE.MeshStandardMaterial.
+
+				Properties
+
+					+ color - Base diffuse color | #fff
+					+ height - Height of video (in pixels), if defining a video texture | 360
+					+ envMap - Environment cubemap texture for reflections. Can be a selector to a csv list of URLs. | none
+				 	+ fog - Whether or not the material is affected by fog | true
+				 	+ metalness - How metallic the material is from 0 to 1 | 0.5
+				 	+ repeat - How many times a texture (defined by src) reapeats in X and Y direction | 1 1
+				 	+ roughness - How rough the material is from 0 to 1. A rougher material will scatter reflected light in more directions than a smooth material | 0.5
+				 	+ width - Width of video (in pixels), if defining a video texture | 640
+				 	+ src - Image or video texture map. Can either be a selector to an <img> or <video>, or an inline URL | none
+
+
+		 	Physically-Based Shading
+
+		 	Physically-based shading is a shading model that aims to make materials behave realistically to lighting conditions. Appearance is a result of the interaction between the incoming light and the properties of the material.
+
+			To achieve realism, the diffuse color (can be supplied through the base material component), metalness, roughness properties of the material must be accurately controlled, often based on real-world material studies. Some people have compiled charts of realistic values for different kinds of materials that can be used as a starting point.
+
+			For example, for a tree bark material, as an estimation, we might set:
+
+			<a-entity geometry="primitive: cylinder"
+			          material="src: treebark.png; color: #696969; roughness: 1; metalness: 0">
+			</a-entity>
+
+
+			Environment Maps
+
+			The envMap property defines what environment the material reflects. Unlike textures, the envMap property takes a cubemap, six images put together to form a cube. The cubemap is wrapped around the mesh and applied as a texture. The clarity of the environment depends on the metalness, and roughness properties.
+
+			For example:
+
+			<a-scene>
+			  <a-assets>
+			    <a-cubemap id="sky">
+			      <img src="right.png">
+			      <img src="left.png">
+			      <img src="top.png">
+			      <img src="bottom.png">
+			      <img src="front.png">
+			      <img src="back.png">
+			    </a-cubemap>
+			  </a-assets>
+			  <a-entity geometry="primitive: box" material="envMap: #sky; roughness: 0"></a-entity>
+			</a-scene>
+
+
+			Flat
+
+			The flat material uses the THREE.MeshBasicMaterial. Flat materials are not affected by the scene’s lighting conditions. This is useful for things such as images or videos or other GUI elements. Set shader to flat:
+
+			<a-entity geometry="primitive: plane" 
+					  material="shader: flat; src: #cat-image">
+			</a-entity>
+
+			Properties
+
+				+ color - Base diffuse color | #fff
+			 	+ fog - Whether or not the material is affected by fog | true
+				+ height - Height of video (in pixels), if defining a video texture | 360
+			 	+ repeat - How many times a texture (defined by src) reapeats in X and Y direction | 1 1
+			 	+ src - Image or video texture map. Can either be a selector to an <img> or <video>, or an inline URL | none
+			 	+ width - Width of video (in pixels), if defining a video texture | 640
+
+
+		 	Textures
+
+		 	To set a texture using one of the built-in materials, specify the src property. src can be a selector to either an <img> or <video> element in the asset management system:
+
+		 	<a-scene>
+			  <a-assets>
+			    <img id="my-texture" src="texture.png">
+			  </a-assets>
+			  <a-entity geometry="primitive: box" material="src: #my-texture"></a-entity>
+			</a-scene>
+
+			src can also be an inline URL. Note that we do not get browser caching or preloading through this method.
+
+			<a-scene>
+			  <a-entity geometry="primitive: box" material="src: url(texture.png)"></a-entity>
+			</a-scene>
+
+			Most of the other properties work together with textures. For example, the color property will act as the base color and be multiplied per pixel with the texture. Set it to #fff to maintain the original colors of the texture.
+
+			Textures are cached by A-Frame in order to not push redundant textures to the GPU.
+
+
+			Video Textures
+
+			Whether the video texture loops or autoplays depends on the video element used to create the texture. If we simply pass a URL instead of creating and passing a video element, then the texture will loop and autoplay by default. To specify otherwise, create a video element in the asset management system, and pass a selector for the id attribute (e.g., #my-video):
+
+			<a-scene>
+			  <a-assets>
+			    <!-- No loop. -->
+			    <video id="my-video" src="video.mp4" autoplay="true">
+			  </a-assets>
+			  <a-entity geometry="primitive: box" material="src: #my-video"></a-entity>
+			</a-scene>
+
+			Controling Video Textures
+
+			To control the video playback such as pausing or seeking, we can use the video element to control media playback. For example:
+
+			<script type="text/javascript">
+				
+				var videoEl = document.querySelector('#my-video');
+				videoEl.currentTime = 122;  // Seek to 122 seconds.
+				videoEl.pause();
+				
+			</script>
+
+
+
+
+
+
+
 
 
 
