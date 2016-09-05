@@ -184,3 +184,82 @@ Given a default value, the schema will infer a property type and inject a parser
 		}
 
 	</script>
+
+
+Single-Property Schemas
+
+Single-property schemas define only a single anonymous flat property. They must define either a type or a default value to be able to infer an appropriate parser and stringifier.
+
+	<script type="text/javascript">
+		AFRAME.registerComponent('visible', {
+		  schema: {
+		    // Type will be inferred to be boolean.
+		    default: true
+		  },
+		  // ...
+		});
+	</script>
+
+
+Multi-Property Schemas
+
+Multi-property schemas it consists of one or more named property definitions. Unlike single-property schemas, each property has a name. When a component has properties then the HTML usage syntax will look like physics="mass: 2; velocity: 1 1 1".
+
+	<script type="text/javascript">
+		AFRAME.registerComponent('physics-body', {
+		  schema: {
+		    boundingBox: {
+		      type: 'vec3',
+		      default: { x: 1, y: 1, z: 1 }
+		    },
+		    mass: {
+		      default: 0
+		    },
+		    velocity: {
+		      type: 'vec3'
+		    }
+		  }
+		}
+	</script>
+
+
+	Lifecyle Methods
+
+	<!-- Important Metaphor | Use neurons -->
+
+	With the schema being the anatomy, the lifecyle methods are the physiology; the schema defines the data, lifecycle methods use the data. A component has access to this.dataa which in a single-property schema is a value and in a multi-property schema is an object.
+
+	The handlers will most always interact with the entity.
+
+
+	Write a component
+
+	Line Component
+
+	Let's build an example line component that renders a line. We want to make the property API flexible enough to be able to specify the color and verticies.
+
+		<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+
+	Skeleton
+
+	Here is a skeleton of the component. We'll just need a schema, an update handler, and a remove handler:
+
+		<script type="text/javascript">
+			
+			var coordinates = AFRAME.utils.coordinates;
+			AFRAME.registerComponent('line', {
+				// Allow line component to accept vertices and color
+				schema: {},
+				// Create or update the line geometry
+				update: {},
+				// Remove the line geometry
+				remove: {}
+			});
+
+		</script>
+
+	Schema
+
+	We have two properties we want to accept: color and path. Thus we will need a multi-property schema. The color property will be a simple string that will be fed to THREE.Color. The path property will need a custom parser and stringifier to handle an array of vec3s for the vertices.
+
+		
