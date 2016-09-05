@@ -339,6 +339,158 @@ Selected Primitives
 
 	The plane primitive creates flat surfaces using the geometry component with the type set to plane.
 
+		<a-scene>
+			<a-assets>
+				<img id="ground" src="ground.jpg">
+			</a-assets>
+			<!-- Basic plane. -->
+			<a-plane color="#CCC" height="20" width="20"></a-plane>
+			<!-- Textured plane parallel to ground. -->
+			<a-plane src="#ground" height="100" width="100" rotation="-90 0 0"></a-plane>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentsWidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
+
+
+<a-ring>
+
+	The ring primitive creates a ring or disc shape. It is an entity that prescribes the geometry with its geometric primitive set to ring.
+
+		<a-assets>
+			<img id="texture" src="texture.png">
+		</a-assets>
+		<!-- Basic ring. -->
+		<a-ring color="teal" radius-inner="1" radius-outer="2"></a-ring>
+		<!-- Textured ring. -->
+		<a-ring src="#texture"></a-ring>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | None
+		+ opacity - material.opacity | 1
+		+ radius-inner - geometry.radiusInner | 0.8
+		+ radius-outer - geometry.radiusOuter | 1.2
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-phi - geometry.segmentsPhi | 10
+		+ segments-theta - geometry.segmentsTheta | 32
+		+ shader- material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | None
+
+
+	---
+	This is a pretty good example of simply pure geometry
+
+
+<a-sky>
+
+	The sky primitive adds a background to a scene or display a 360-degree photo. It is an entity that prescribes a large sphere with the material mapped to the inside.
+
+	An equirectangular image as a background:
+
+		<a-scene>
+			<a-assets>
+				<img id="sky" src="sky.png">
+			</a-assets>
+			<a-sky src="#sky"></a-sky>
+		</a-scene>
+
+	A plain color as a background:
+
+		<a-sky color="#6EBAA7"></a-sky>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ phi-length -geometry.phiLength | 360
+		+ phi-start - geometry.phiStart | 0
+		+ radius - geometry.radius | 5000
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 20
+		+ segments-width - geometry.segmentsWidth | 64
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 180
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+	Equirectangular Image
+
+	In order to be seamless, images should be equirectangular. We can find some sample equirectangular images on Flickr. To take an equirectangular photo, check out this 360-degree photography guide.
+
+
+<a-sound>
+
+	The sound primitive wraps the sound component.
+
+		<a-scene>
+		  	<a-sound src="src: click.mp3; autoplay: true" position="0 2 5"></a-sound>
+		</a-scene>
+
+	
+	Attributes
+
+		+ autoplay - sound.autoplay | false
+		+ loop - sound.loop | false
+		+ on - sound.on | null
+		+ src - sound.src | null
+		+ volume - sound.volume | 1
+
+
+<a-sphere>
+
+	The sphere primitive creates a spherical or polyhedron shapes. It wraps an entity that prescribes the geometry component with its geometric primitive set to sphere.
+
+		<a-sphere color="yellow" radius="5"></a-sphere>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ phi-length - geometry.phiLength | 360
+		+ phi-start - geometry.phiStart | 0
+		+ radius - geometry.radius | 1
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 18
+		+ segments-width - geometry.segmentsWidth | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 180
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
 
 
 
