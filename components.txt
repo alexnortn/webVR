@@ -1,0 +1,299 @@
+
+
+
+
+
+Alex Norton
+2016
+-
+
+
+Selected Components
+
+Camera
+
+	The camera component defines from which perspective the user views the scene. It is often paired with controls components that allow input devices to move and rotate the camera.
+
+	It is recommended to wrap entities with the camera component within another entity. This allows us to change the position and rotation of the camera without colliding with controls.
+
+	Example
+
+	A camera situated at human-level height (1.8 meters).
+
+		<a-entity camera="userHeight: 1.8" look-controls></a-entity>
+
+	Properties
+
+		+ active
+		+ far
+		+ fov
+		+ near
+		+ userHeight
+		+ zoom
+
+	Fixing Entities to the Camera
+
+	To fix entities onto the camera such that they stay within view no matter where the user looks, you can attach those entities as a child of the camera. Use cases might be a heads-up display (HUD).
+
+		<a-entity camera look-controls>
+			<a-entity geometry="primitive: plane; 
+								height: 0.2;
+								width: 0.2" 
+					  position="0 0 -1"
+					  material="color: gray; 
+					  			opacity: 0.5">
+			</a-entity>
+		</a-entity>
+
+	Note that you should use HUDs sparingly as they cause irritation and eye strain in VR. Consider integrating menus into the fabric of the world itself. If you do create a HUD, make sure that it is more in the center of the field of view such that the user does not have to strain their eyes to read it.
+
+
+Cursor
+
+	The cursor component lets us inteact with entities through clicking and gazing. It is a specific application of the raycaster component in that it:
+
+		+ Listens for mouse clicks and gazed based fuses.
+		+ Captures on the first intersected entity.
+		+ Emits special mouse and hover events (e.g., relating mouse down/up/enter/leave).
+		+ Has additional states for hovering.
+
+	When the mouse is clicked, the closest visible entity intersecting the cursor, if any, will emit a click event. Note the cursor component only applies raycasting behavior. To provide share or appearance to the cursor, you could apply the geometry and material components.
+
+	
+	Example
+
+	For example, we can create a ring-shaped cursor that is fixed to the center of the screen. To fix it to the screen such that it is always present no matter where we look, we place it as a child of the active camera entity. We pull it in front of the camera by placing it on the negative Z axis. When the cursor clicks on the box, we can listen to the click event.
+
+		<a-entity camera>
+			<a-entity cursor="fuse: true; fuseTimeout: 500"
+					  position="0 0 -1"
+					  geometry="primitive: ring"
+					  material="color: black; shader: flat">
+			</a-entity>
+		</a-entity>
+		<a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity>
+
+		<script type="text/javascript">
+			
+			// Component to change to random color on click.
+			AFRAME.registerComponent('click-color-change', {
+				init: function () {
+					var COLORS = ['red', 'green', 'blue'];
+					this.el.addEventListener('click', function () {
+						var randomIndex = Math.floor(Math.random() * COLORS.length);
+						this.setAttribute('material', 'color', COLORS[randomIndex]);
+						console.log('I was clicked!');
+					});
+				}
+			});
+
+		</script>
+
+		
+		Properties
+
+		Note, to further customize the cursor component, we can set the properties of the raycaster component.
+
+			+ fuse - whether cursor is fused-based
+			+ fuseTimeout
+
+
+		Events
+
+			+ click
+			+ mousedown
+			+ mouseenter
+			+ mouseleave
+			+ mouseup
+
+		
+		States
+
+			+ cursor-fusing
+			+ cursor-hovering
+
+		
+		Configuring the Cursor through the Raycaster Component
+
+		The cursor is built on top of and depends on the raycaster component. If we want to customize the raycasting pieces of the cursor, we can do by changing the raycaster component properties. Say we want set a max distance, check for intersections less frequently, and set which objects are clickable:
+
+		<a-entity cursor raycaster="far: 20; interval: 1000; objects: .clickable"></a-entity>
+
+
+		Fuse-Based Cursor
+
+		Also known as gaze-based cursor. If the cursor is set to be fuse-based, the cursor will trigger a click if the user gazes at an entity for a set amount of time. Imagine a laser strapped to the user’s head, and the laser extends out into the scene. If the user stares at an entity long enough (i.e., the fuseTimeout), then the cursor will trigger a click.
+
+		The advantage of fuse-based interactions for VR is that it does not require additional input devices other than the headset. It is primarily intended for Google Cardboard applications. The disadvantage of fuse-based interactions is that it requires the user to turn their head a lot.
+
+
+		Adding Visual Feedback
+
+		To add visual feedback to the cursor in order to display indication when the cursor is clicking or fusing, we can use the animation system. When the cursor intersects the entity, it will emit an event, and the animation system will pick up event with the begin attribute:
+
+			<a-entity cursor="fuse: true; timeout: 500"
+					  position="0 0 -1"
+					  geometry="primitive: ring"
+					  material="color: black; shader: flat">
+				<a-animation begin="click" easing="ease-in" attribute="scale"
+							 fill="backwards" from="0.1 0.1 0.1" to="1 1 1">
+				2</a-animation>
+				<a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+							 fill="forwards" from="1 1 1" to="0.1 0.1 0.1">
+				</a-animation>
+			</a-entity>
+
+		Definitely need to show off the Fusing + Gazing interaction --> That's a new one.
+
+
+	Geometry
+
+		The geometry component provides a basic shape for an entity. The general geometry is defined by the primitive property. Geometric primitives, in computer graphics, means an extremely basic shape. With the primitive defined, additional properties are used to further define the geometry. A material component is usally defined to provide an appearance alongside the shape to careate a complete mesh.
+
+
+		Basic Properties
+
+		Every geometry type will have these properties:
+
+			+ buffer - 	Transform geometry into a BufferGeometry to reduce memory usage at the cost of being harder to manipulate.	
+			+ mergeTo - A selector to an entity to merge the entity’s geometry to.
+			+ primitive - Name of a geometry (e.g., one of the geometries listed below). Determines the geometry type and what other properties are available.
+			+ skipCache - Disable retrieving the shared geometry object from the cache.
+
+
+		Built-In Geometries
+
+			Box
+
+			The box geometry defines boxes.
+			<a-entity geometry="primitive: box; width: 1; height: 1; depth: 1"></a-entity>
+
+				+ width
+				+ height
+				+ depth
+
+			
+			Circle
+
+			The circle geometry creates flat two-dimensional circles. These can be complete circles or partial circles (like Pac-Man). Note that because it is flat, only a single side of the circle will be rendered if “side: double” is not specified on the material component.
+
+			<a-entity geometry="primitive: circle; radius: 1" material="side: double"></a-entity>
+
+				+ radius
+				+ segments - Number of triangles to construct the circle, like pizza slices.
+				+ thetaStart - Start angle for the first segment. (circle start).
+				+ thetaLength - The central area (in degrees). Defaults to 360. (circle end).
+
+			
+			Cone
+
+			The cone geometry is a cylinder geometry that have different top and bottom radii.
+			<a-entity geometry="primitive: cone; radiusBottom: 1; radiusTop: 0.1"></a-entity>
+
+				+ height
+				+ openEnded
+				+ radiusBottom
+				+ radiusTop
+				+ segmentsRadial
+				+ segmentsHeight
+				+ thetaStart
+				+ thetaEnd
+
+			
+			Cylinder
+
+			The cylinder geometry creates cylinders in the traditional sense like a Coca-Cola™ can, but it can also define shapes such as tubes and curved surfaces.
+
+			We can create a basic cylinder using height and radius:
+
+			<a-entity geometry="primitive: cylinder; height: 3; radius: 2"></a-entity>
+
+			We can create a tube by making the cylinder open-ended, which removes the top and bottom surfaces of the cylinder such that the inside is visible. Then a double-sided material will be needed to render properly:
+
+			<!-- Tube -->
+			<a-entity geometry="primitive: cylinder; openEnded: true" 
+					  material="side: double">
+			</a-entity>
+
+			We can create a cured surfaces by specifying the arc via thetaLength such that the cylinder doesn’t curve all the way around, making the cylinder open-ended, and then making the material double-sided:
+
+			<!-- Curved surface -->
+			<a-entity geometry="primitive: cylinder; openEnded: true; thetaLength: 180"
+         			  material="side: double">
+         	</a-entity>
+
+				+ height
+				+ openEnded
+				+ radiusBottom
+				+ radiusTop
+				+ segmentsRadial
+				+ segmentsHeight
+				+ thetaStart
+				+ thetaEnd
+
+			We can create prisms by changing the number of radial segments (i.e., sides). For example, to make a hexagonal prism:
+
+			<!-- Hexagonal prism -->
+			<a-entity geometry="primitive: cylinder; segmentsRadial: 6"></a-entity>
+
+			
+			Plane
+
+			The plane geometry creates a flat surface. Because it is flat, only a single side of the plane will be rendered unless side: double is specified on the material component.
+
+			<a-entity geometry="primitive: plane; height: 10; width: 10" 
+					  material="side: double">
+			</a-entity>
+
+				+ width
+				+ height
+
+
+			Ring
+
+			The ring geometry creates a flat ring, like a CD. Because it is flat, only a single side of the ring will be rendered unless side: double is specified on the material component.
+
+			<a-entity geometry="primitive: ring; radiusInner: 0.5; radiusOuter: 1"
+          			  material="side: double">
+          	</a-entity>
+
+          		+ radiusInnter
+          		+ radiusOutter
+          		+ segmentsTheta
+          		+ segmentsPhi
+          		+ thetaStart
+          		+ thetaLength
+
+
+          	Sphere
+
+          	The sphere geometry creates spheres (e.g., balls). We can create a basic sphere:
+
+          	<a-entity geometry="primitive: sphere; radius: 2"></a-entity>
+
+          	We can create various polyhedrons and abstract shapes by specifying the number of horizontal angles and faces:
+
+          	<a-entity geometry="primitive: sphere; segmentsWidth: 2; segmentsHeight: 8"></a-entity>
+
+          		+ radius
+          		+ segmentsWidth
+          		+ segmentsHeight
+          		+ phiStart
+          		+ phiLength
+          		+ thetaStart
+          		+ thetaLength
+
+
+      		Register a Custom Geometry
+
+      		We can register our own geometries using AFRAME.registerGeometry and creating an object that is an instance of THREE.Geometry. All built-in geometries in A-Frame are registered using this API.
+
+      		Here is how the box geometry is registered.
+
+
+
+
+
+
+
+
