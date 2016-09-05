@@ -146,23 +146,23 @@ Selected Primitives
 
 	Attributes
 
-		color - material.colo | #FFF
-		height - geometry.height | 1
-		metalness - material.metalness | 0
-		opacity	- material.opacity | 1
-		open-ended - geometry.openEnded	| false
-		radius-bottom - geometry.radiusBottom | 1
-		radius-top - geometry.radiusTop	| 0.8
-		repeat - material.repeat | None
-		roughness - material.roughness | 0.5
-		segments-height	- geometry.segmentsHeight | 18
-		segments-radial	- geometry.segmentsRadial | 36
-		shader - material.shader | standard
-		side - material.side | front
-		src	- material.src | None
-		theta-length - geometry.thetaLength	| 360
-		theta-start	- geometry.thetaStart | 0
-		transparent	- material.transparent | false
+		+ color - material.colo | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ ope -ended - geometry.openEnded | false
+		+ radiu -bottom - geometry.radiusBottom | 1
+		+ radiu -top - geometry.radiusTop | 0.8
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segment -height - geometry.segmentsHeight | 18
+		+ segment -radial - geometry.segmentsRadial | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ thet-length - geometry.thetaLength | 360
+		+ thet -start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
 
 
 	---
@@ -194,7 +194,7 @@ Selected Primitives
 	Need to figure out how to explain components vs primitives
 
 
-<a-curved-image>
+<a-curvedimage>
 
 	The curved image primitive creates images that bend around the user. Curved images arranged around the camera can be pleasing for legibility since each pixel sits at the same distance from the user. They can be a better choice than angled flat planes for complex layouts because they ensure a smooth surface rather than a series of awkward seams between planes. It is an entity that prescribes a double-sided open-ended cylinder with the geometry component and rendering textures on the inside of the cylinder with the material component.
 
@@ -212,22 +212,133 @@ Selected Primitives
 
 	Attributes
 
-		color - material.color | #FFF
-		height - geometry.height | 1
-		metalness - material.metalness | 0
-		opacity - material.opacity | 1
-		open-ended - geometry.openEnded | false
-		radius - geometry.radius | 1
-		repeat - material.repeat | None
-		roughness	material - roughness	0 | 5
-		segments-height - geometry.segmentsHeight | 18
-		segments-radial - geometry.segmentsRadial | 36
-		shader - material.shader | standard
-		side - material.side | front
-		src - material.src | None
-		theta-length - geometry.thetaLength | 360
-		theta-start - geometry.thetaStart | 0
-		transparent - material.transparent | false
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ open-ended - geometry.openEnded | false
+		+ radius - geometry.radius | 1
+		+ repeat - material.repeat | None
+		+ roughness	material - roughness	0 | 5
+		+ segments-height - geometry.segmentsHeight | 18
+		+ segments-radial - geometry.segmentsRadial | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+	Fine Tuning
+
+	Ensuring that the image is not distorted by stretching requires us to carefully set the height, radius, and theta-length attributes with respect to the image aspect ratio. Once those values are fine-tuned to avoid distortion, scale can then be used to safely adjust the distance of the curved image relative to the user.
+
+
+<a-image>
+
+	The image primitive displays an image on a flat plane. It is an entity that prescribes the geometry with its geometric primitive set to plane.
+
+		<a-scene>
+			<a-assets>
+			<img id="my-image" src="image.png">
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-image src="#my-image"></a-image>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-image src="another-image.png"></a-image>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness	- material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.repeat	No | e
+		+ roughness - material.roughness	0 | 5
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentsWidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
+
+
+	Fine Tuning
+
+	Ensuring that the image is not distorted by stretching requires us to approriately set the width and height.
+
+		<a-image src="#logo" width="200" height="100"></a-image>
+
+
+<a-light>
+
+	The light primitive adjusts the lighting setup of the scene. It is an entity that maps attributes to properties of the light component.
+
+		<!-- Red directional light shining from the top left. -->
+		<a-light color="red" position="-1 1 0"></a-light>
+		<!-- Blue point light, 5 meters in the air. -->
+		<a-light type="point" color="blue" position="0 5 0"></a-light>
+		<!-- Dim ambient lighting. -->
+		<a-light type="ambient" color="#222"></a-light>
+
+
+	Attributes
+
+		+ angle - light.angle | 60
+		+ color - light.color | #fff
+		+ decay - light.decay | 1
+		+ distance - light.distance | 0.0
+		+ ground-color - light.groundColor | #fff
+		+ intensity - light.intensity | 1.0
+		+ penumbra - light.penumbra | 0.0
+		+ type - light.type | directional
+		+ target - light.target | null
+
+
+	Differences with the Default Lighting
+
+	When we add a light, A-Frame will remove the default lighting setup (i.e., one directional light from the top-left, and one small ambient light).
+
+	---
+	Explaim this, I guess.
+
+
+<a-obj-model>
+
+	glTF is recommended for distributing assets in production over the web. Check out using the glTF component. You can either instead export to COLLADA and use the converter or try out the OBJ converter.
+
+	The .OBJ model primitive displays a 3D Wavefront model. It is an entity that maps the src and mtl attributes to the obj-model component’s obj and mtl properties respectively.
+
+		<a-scene>
+			<a-assets>
+				<a-asset-item id="crate-obj" src="crate.obj"></a-asset-item>
+				<a-asset-item id="crate-mtl" src="crate.mtl"></a-asset-item>
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-obj-model src="#crate-obj" mtl="#crate-mtl"></a-obj-model>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-obj-model src="crate.obj" mtl="crate.mtl"></a-obj-model>
+		</a-scene>
+
+
+	Attribute
+
+		+ mtl - obj-model.mtl | null
+		+ obj - obj-model.obj | null
+
+
+	---
+	If we're gonna use this, we should explain it.
+
+
+<a-plane>
+
+	The plane primitive creates flat surfaces using the geometry component with the type set to plane.
+
 
 
 
