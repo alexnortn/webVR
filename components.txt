@@ -143,6 +143,8 @@ Cursor
 				</a-animation>
 			</a-entity>
 
+		
+		---
 		Definitely need to show off the Fusing + Gazing interaction --> That's a new one.
 
 
@@ -290,8 +292,59 @@ Cursor
 
       		Here is how the box geometry is registered.
 
+      		<script type="text/javascript">
+      			
+      			AFRAME.registerGeometry('box', {
+				  schema: {
+				    depth:  {default: 1, min: 0},
+				    height: {default: 1, min: 0},
+				    width:  {default: 1, min: 0},
+				    segmentsHeight: {default: 1, min: 1, max: 20, type: 'int'},
+				    segmentsWidth:  {default: 1, min: 1, max: 20, type: 'int'},
+				    segmentsDepth:  {default: 1, min: 1, max: 20, type: 'int'}
+				  },
+				  init: function (data) {
+				    this.geometry = new THREE.BoxGeometry(data.width, data.height, data.depth);
+				  }
+				});
 
+      		</script>
 
+      		Like with registering components, we provide a name, a schema that will expose the properties of the geometry, and lifecycle methods. Then the geometry needs to be created and set on this.geometry through the init and update lifecycle methods.
+
+      		When a geometry component sets its primitive property to the custom geometry name, the properties of the custom geometry can be set on the geometry component. Say we registered a custom geometry:
+
+      		<script type="text/javascript">
+      			
+				AFRAME.registerGeometry('example', {
+				  schema: {
+				    vertices: {
+				      default: ['-10 10 0', '-10 -10 0', '10 -10 0'],
+				    }
+				  },
+				  init: function (data) {
+				    var geometry = new THREE.Geometry();
+				    geometry.vertices.push.call(
+				      geometry.vertices,
+				      data.vertices.map(function (vertex) {
+				        var points = vertex.split(' ').map(parseInt);
+				        return new THREE.Vector3(points[0], points[1], points[2]);
+				      });
+				    );
+				    geometry.faces.push(new THREE.Face3(0, 1, 2));
+				    this.geometry = geometry;
+				  }
+				});
+
+      		</script>
+
+      		We can then use that custom geometry in HTML:
+
+      		<a-entity geometry="primitive: example; vertices: 1 1 1, 2 2 2, 3 3 3"></a-entity>
+
+      		
+      		---
+      		No need to go into custom geometry, but explaining basic shapes could be useful, think of what we need to build a basketball court.
 
 
 
