@@ -223,43 +223,82 @@ Multi-property schemas it consists of one or more named property definitions. Un
 	</script>
 
 
-	Lifecyle Methods
+Lifecyle Methods
 
-	<!-- Important Metaphor | Use neurons -->
+<!-- Important Metaphor | Use neurons -->
 
-	With the schema being the anatomy, the lifecyle methods are the physiology; the schema defines the data, lifecycle methods use the data. A component has access to this.dataa which in a single-property schema is a value and in a multi-property schema is an object.
+With the schema being the anatomy, the lifecyle methods are the physiology; the schema defines the data, lifecycle methods use the data. A component has access to this.dataa which in a single-property schema is a value and in a multi-property schema is an object.
 
-	The handlers will most always interact with the entity.
+The handlers will most always interact with the entity.
 
 
-	Write a component
+Write a component
 
-	Line Component
+Line Component
 
-	Let's build an example line component that renders a line. We want to make the property API flexible enough to be able to specify the color and verticies.
+Let's build an example line component that renders a line. We want to make the property API flexible enough to be able to specify the color and verticies.
 
-		<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+	<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
 
-	Skeleton
+Skeleton
 
-	Here is a skeleton of the component. We'll just need a schema, an update handler, and a remove handler:
+Here is a skeleton of the component. We'll just need a schema, an update handler, and a remove handler:
 
-		<script type="text/javascript">
-			
-			var coordinates = AFRAME.utils.coordinates;
-			AFRAME.registerComponent('line', {
-				// Allow line component to accept vertices and color
-				schema: {},
-				// Create or update the line geometry
-				update: {},
-				// Remove the line geometry
-				remove: {}
-			});
-
-		</script>
-
-	Schema
-
-	We have two properties we want to accept: color and path. Thus we will need a multi-property schema. The color property will be a simple string that will be fed to THREE.Color. The path property will need a custom parser and stringifier to handle an array of vec3s for the vertices.
-
+	<script type="text/javascript">
 		
+		var coordinates = AFRAME.utils.coordinates;
+		AFRAME.registerComponent('line', {
+			// Allow line component to accept vertices and color
+			schema: {},
+			// Create or update the line geometry
+			update: {},
+			// Remove the line geometry
+			remove: {}
+		});
+
+	</script>
+
+
+Schema
+
+We have two properties we want to accept: color and path. Thus we will need a multi-property schema. The color property will be a simple string that will be fed to THREE.Color. The path property will need a custom parser and stringifier to handle an array of vec3s for the vertices.
+
+	<script type="text/javascript">
+		
+		// Allow line component to accept verticies and color.
+		schema: {
+			color: { default: '#333' },
+			path: {
+				default: [
+					{ x: -0.5, y: 0, z:0 },
+					{ x: -0.5, y: 0, z:0 }
+				],
+				// Deserialize path in the form of comma-separated vec3s: '0 0 0, 1 1 1, 2 0 3'.
+				}
+				parse: function(value) {
+					return value.split(,).map(coordinates.parse);
+				}
+				// Serialize array of vec3s in case someone does
+				// setAttribute('line', 'path', [...]).
+				stringify: function (data) {
+					return data.map(coordinates.stringify).join(',');
+				}
+			}
+		},
+		//...
+
+	</script>
+
+
+The component API is entirely up to us. If we wanted the path to take a different syntax or abstract it further such that it maybe only accepts a starting point and a length and handle the math for the developer, we could do so.
+
+
+Update
+
+The schema will hand the dat to the update handler all parsed and ready to go. Here, we want to create a line geometry if it doesn't exist yet and update it if it does. We can create a line in three.js by combining a THREE.LineBasicMaterial and THREE.Geometry and then manually pushing verticies.
+
+	<script type="text/javascript">
+		
+		
+		
+	</script>
