@@ -73,3 +73,6 @@ If an entity itself defines a property that is already defined by a mixin, they 
 		</a-assets>
 		<a-entity mixin="red blue cube" material="color: green"></a-entity>
 	</a-scene>
+
+
+Mixins + Templating Engine + Data
