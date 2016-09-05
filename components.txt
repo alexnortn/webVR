@@ -628,10 +628,130 @@ Cursor
 				var videoEl = document.querySelector('#my-video');
 				videoEl.currentTime = 122;  // Seek to 122 seconds.
 				videoEl.pause();
+
+			</script>
+
+			--- 
+			There is more here, but that's way beyond what we have time for.
+
+
+		Obj-Model
+
+			The obj-model component loads a 3D model and material using a Wavefront (.OBJ) file and a .MTL file.
+
+			Example
+
+			We can load an .OBJ model by pointing to assets that specify the path to an .OBJ and .MTL file:
+
+			<a-scene>
+			  <a-assets>
+			    <a-asset-item id="tree-obj" src="/path/to/tree.obj"></a-asset-item>
+			    <a-asset-item id="tree-mtl" src="/path/to/tree.mtl"></a-asset-item>
+			  </a-assets>
+			  <a-entity obj-model="obj: #tree-obj; mtl: #tree-mtl"></a-entity>
+			</a-scene>
+
+
+			Properties
+
+				+ obj - Selector to and <a-asset-item> pointing to a .OBJ file or inline to path
+				+ mtl - Selector to and <a-asset-item> pointing to a .MTL file or inline to path. Optional if you wish to use the material component instead.
+
+			---
+			Might be useful to demo, maybe we load the "Stadium"
+
+
+		Position
+
+			The position component defines where an entity is placed in the scene’s world space. It takes a coordinate value as three space-delimited numbers.
+
+			All entities inherently have the position component.
+
+			Example
+
+			<a-entity position="0 1 -1"></a-entity>
+
+
+			Relative Positioning
+
+			World-space positions of child entities are inherited from parent entities. Consider this scene:
+
+			<a-entity id="parent" position="1 2 3">
+			  <a-entity id="child-1"></a-entity>
+			  <a-entity id="child-2" position="2 3 4"></a-entity>
+			</a-entity>
+
+			The world-space position of #child1 would be 1 2 3 as inherited by the entity. In the local parent’s space, #child1‘s position would be seen as 0 0 0.
+
+			The world-space position of #child2 would be 3 5 7, by combining the position with the parent entity. In the parent’s local space, #child2‘s position would be seen as 2 3 4.
+
+			--- 
+			Super useful
+
+
+		Raycaster
+
+			The raycaster component does general intersection testing with a raycaster. Raycasting is the method of extending a line from an origin towards a direction, and checking whether that line intersects with other entites. The raycaster component is a wrapper on top of the three.js raycaster. It checks for intersections at a certain interval against a list of objects, and will emit events on the entity when it detects intersections or clearing of intersections (i.e., when the raycaster is no longer intersecting an entity).
+
+			The raycaster component is what the cursor component is built upon.
+
+			Example
+
+			<a-entity id="player" collider-check>
+				<a-entity raycaster="objects: .collidable"
+						  position="0 -0.9 0"
+						  rotation="90 0 0">
+				</a-entity>
+			</a-entity>
+			<a-entity class="collidable"
+					  geometry="primitive: box"
+					  position="1 0 0">
+			</a-entity>
+
+			<script type="text/javascript">
 				
+				AFRAME.registerComponent('collider-check', {
+				  dependencies: ['raycaster'],
+				  init: function () {
+				    this.el.addEventListener('raycaster-intersected', function () {
+				      console.log('Player hit something!');
+				    });
+				  }
+				});
+
 			</script>
 
 
+			Properties
+
+				+ far - Maximum distance under which resulting entities are returned. Cannot be lower than near. | Inifity
+				+ interval - Number of millisecondsto wait between each intersection test | 100
+				+ near - Minimum distance over which resulting entities are returned. Cannot be lower than 0 | 0
+				+ objects - Query selector to pick which objects to test for intersection. If not specified all entities will be tested | null
+				+ recursive - Check all children of objecst if set. Else only checks intersections with root objects | true
+
+
+			Events
+
+				+ raycaster-intersected - Emitted on the intersected entity. Entity is intersecting with a raycaster. Event detail will contain el, the raycasting entity, and intersection, an object containing detailed data about the intersection.
+				+ raycaster-intersected-cleared - Emitted on the intersected entity. Entity is no longer intersecting with a raycaster. Event detail will contain el, the raycasting entity.
+				+ raycaster-intersection - Emitted on the raycasting entity. Raycaster is intersecting with one or more entities. Event detail will contain els, an array with the intersected entities, and intersections, an array of objects containing detailed data about the intersections.
+				+ raycaster-intersection-cleared - Emitted on the raycasting entity. Raycaster is intersecting with one or more entities. Event detail will contain els, an array with the intersected entities, and intersections, an array of objects containing detailed data about the intersections.
+
+
+			Members
+
+				+ intersectedEls - Entities currently intersecting the raycaster
+				+ objects - three.js objects to test for intersections. Will be scene.children if objects property is not specified.
+				+ raycaster - three.js raycaster object
+
+
+			Methods
+
+				+ refreshObject - Refreshes the list of objects based off of the objects property to test for intersection.
+
+
+			
 
 
 
