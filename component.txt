@@ -299,6 +299,129 @@ The schema will hand the dat to the update handler all parsed and ready to go. H
 
 	<script type="text/javascript">
 		
-		
-		
+		update: function(oldData) {
+			// Set color with material:
+			var material = new THREE.LineBasicMaterial({
+				color: this.data.color
+			});
+			// Add vertices to geometry
+			var geometry = new THREE.Geometry();
+			this.data.path.forEach(function(vec3) {
+				geometry.vertices.push(
+					new THREE.Vector3(vec3.x, vec3.y, vec3.z)
+				);
+			});
+			// Apply mesh.
+			this.el.setObject3D('mesh', new THREE.line(geometry, material));
+		},
+		//...
+
 	</script>
+
+Here, we update the line by completely replacing it. Though sometimes, we might want to more granularly update objects for better performance.
+
+
+Remove
+
+For removal of the line mesh from the entity, we use Entity.removeObject3D:
+
+	<script type="text/javascript">
+		
+	remove: function() {
+		this.el.removeObject3D('mesh');
+	}
+
+	</script>
+
+This will remove the object from the entity's scene graph.
+
+
+Usage
+
+Then with the line component written and registered, we can use it in HTML:
+
+	<a-scene>
+		<a-assets>
+			<a-mixin id="red" line="color: #E20049"></a-mixin>
+		</a-assets>
+		<a-entity id="happy-face" position="0 2 -10">
+			<a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: -2 1 0, 0 -2 0, 2 -1 0"></a-entity>
+		</a-entity>
+		<a-sky color="#FFEED0"></a-sky>
+	</a-scene>
+
+Happy face with the line component!
+
+
+Putting it all together:
+
+Basic line component usage:
+
+	<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+
+Component Definition
+
+	<script type="text/javascript">
+		
+		var coordinates = AFRAME.utils.coordinates;
+		AFRAME.registerComponent('line', {
+			// Allow line component to accept vertices and color
+			schema: {
+				color: { default: '#333' },
+				path: {
+					default: [
+						{ x: -0.5, y: 0, z:0 },
+						{ x: -0.5, y: 0, z:0 }
+					],
+					// Deserialize path in the form of comma-separated vec3s: '0 0 0, 1 1 1, 2 0 3'.
+					}
+					parse: function(value) {
+						return value.split(,).map(coordinates.parse);
+					}
+					// Serialize array of vec3s in case someone does
+					// setAttribute('line', 'path', [...]).
+					stringify: function (data) {
+						return data.map(coordinates.stringify).join(',');
+					}
+				}
+			},
+			// Create or update the line geometry
+			update: function(oldData) {
+				// Set color with material:
+				var material = new THREE.LineBasicMaterial({
+					color: this.data.color
+				});
+				// Add vertices to geometry
+				var geometry = new THREE.Geometry();
+				this.data.path.forEach(function(vec3) {
+					geometry.vertices.push(
+						new THREE.Vector3(vec3.x, vec3.y, vec3.z)
+					);
+				});
+				// Apply mesh.
+				this.el.setObject3D('mesh', new THREE.line(geometry, material));
+			},
+			// Remove the line geometry
+			remove: function() {
+				this.el.removeObject3D('mesh');
+			}
+		});
+
+	</script>
+
+Usage:
+
+	<a-scene>
+		<a-assets>
+			<a-mixin id="red" line="color: #E20049"></a-mixin>
+		</a-assets>
+		<a-entity id="happy-face" position="0 2 -10">
+			<a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: -2 1 0, 0 -2 0, 2 -1 0"></a-entity>
+		</a-entity>
+		<a-sky color="#FFEED0"></a-sky>
+	</a-scene>
+
