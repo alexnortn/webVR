@@ -425,3 +425,6 @@ Usage:
 		<a-sky color="#FFEED0"></a-sky>
 	</a-scene>
 
+---
+
+I don't think we have time to go into writing your own components, maybe just overview + use.

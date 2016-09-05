@@ -16,13 +16,14 @@ Consider the entity below. By itselt, it has no appearance, behavior, or functio
 
 	<a-entity>
 
-We can attach componenets to it to make it render something or do something. To give it shape an appearance, we can attach the geometry and material components.
+We can attach components to it to make it render something or do something. To give it shape an appearance, we can attach the geometry and material components.
 
 	<a-entity geometry="primitive: box" material="color: red"></a-entity>
 
 Or to make it emit light, we can further attach the light component
 	
-	<a-entity geometry="primitive: box" material="color: red"
+	<a-entity geometry="primitive: box"
+			  material="color: red"
 			  light="type: point; intensity: 2.0">
 	</a-entity>
 
@@ -33,7 +34,9 @@ We can simple retrieve and entity using DOM APIs.
 
 	<a-entity id="mario"></a-entity>
 
-	var el = document.querySelector('#mario');
+	<script type="text/javascript">
+		var el = document.querySelector('#mario');
+	</script>
 
 Once we have an entity, we have access to all of its properties and methods, which are detailed below.
 
@@ -46,25 +49,33 @@ Components
 
 For example, if we wanted to grab an entity's three.js camera object or material object, we could reach into its components:
 
-	var camera = document.querySelector('a-entity[camera]').components.camera.camera;
-	var material = document.querySelector('a-entity[material]').components.material.material;
+	<script type="text/javascript">
+		
+		var camera = document.querySelector('a-entity[camera]').components.camera.camera;
+		var material = document.querySelector('a-entity[material]').components.material.material;
+
+	</script>
 
 Or if a component exposes and API, we can call its methods:
 
-	document.querySelector('a-entity[sound]').components.sound.pause();
+	<script type="text/javascript">
+		document.querySelector('a-entity[sound]').components.sound.pause();
+	</script>
 
 
 Methods
 
 addState will push state onto an entity. This will emit the stateadded event, and the state can then be checked for existence using .is:
 
-	entity.addEventListener('stateadded', function (evt) {
-	  if (evt.state === 'selected') {
-	    console.log('Entity now selected!');
-	  }
-	});
-	entity.addState('selected');
-	entity.is('selected');  // >> true
+	<script type="text/javascript">
+		entity.addEventListener('stateadded', function (evt) {
+		  if (evt.state === 'selected') {
+		    console.log('Entity now selected!');
+		  }
+		});
+		entity.addState('selected');
+		entity.is('selected');  // >> true
+	</script>
 
 	---
 	getAttribute(attr)
