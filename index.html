@@ -1,0 +1,73 @@
+
+
+
+
+
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/0.3.1/aframe.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+	<style type="text/css">
+		/* Something */
+	</style>
+</head>
+
+<body>
+	<!-- Scene is HTML goes in the body -->
+	<a-scene>
+
+		<!-- Camera with customized cursor -->
+		<a-entity camera>
+			<a-entity cursor="fuse: true; fuseTimeout: 500"
+					  position="0 0 -5"
+					  geometry="primitive: ring; radiusInner: 0.1; radiusOuter: 0.15"
+					  material="color: black; shader: flat">
+			  	<a-animation begin="click" easing="ease-in" attribute="scale"
+               				 fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
+  				<a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+               				 fill="forwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+			</a-entity>
+		</a-entity>
+		<a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity>
+
+		<a-light color="#da47da" position="0 5 0" type="ambient"></a-light>
+		<a-entity camera look-controls wasd-controls></a-entity>
+		<a-entity light="type: point; color: #EEE; intensity: 0.5" position="0 3 0"></a-entity>
+		<!-- Sky -->
+		<a-sky color="#c8f8e0"></a-sky>
+	</a-scene>
+
+	<script>
+		// Component to change to random color on click.
+		AFRAME.registerComponent('click-color-change', {
+		  init: function () {
+		    var COLORS = ['red', 'green', 'blue'];
+		    this.el.addEventListener('click', function () {
+		      var randomIndex = Math.floor(Math.random() * COLORS.length);
+		      this.setAttribute('material', 'color', COLORS[randomIndex]);
+		      console.log('I was clicked!');
+		    });
+		  }
+		});
+
+		// Upon entering VR, go fullscreen
+		element.addEventListener('click', fullscreen, false);
+
+		// Fullscreen, dismiss pesky headers on mobile
+		function fullscreen() {
+			if (container.requestFullscreen) {
+				container.requestFullscreen();
+			} 
+			else if (container.msRequestFullscreen) {
+				container.msRequestFullscreen();
+			} 
+			else if (container.mozRequestFullScreen) {
+				container.mozRequestFullScreen();
+			}
+			else if (container.webkitRequestFullscreen) {
+				container.webkitRequestFullscreen();
+			}
+		}
+	</script>
+</body>
