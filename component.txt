@@ -56,9 +56,14 @@ Under the Hood
 
 A component is registered using AFRAME.registerComponent, which we pass a component name to reigster a component under and a component definition. Below is the outer skeleton for the position component:
 
-	AFRAME.registerComponent('position', {
-	  // ...
-	});
+	<script type="text/javascript">
+		
+		AFRAME.registerComponent('position', {
+		  // ...
+		});
+
+	</script>
+
 
 A component defines a schema that defines its properties, giving anatomy to the component. The position component takes a flat vec3, or and {x, y, z} object.
 
@@ -366,6 +371,7 @@ Component Definition
 	<script type="text/javascript">
 		
 		var coordinates = AFRAME.utils.coordinates;
+
 		AFRAME.registerComponent('line', {
 			// Allow line component to accept vertices and color
 			schema: {
@@ -375,7 +381,7 @@ Component Definition
 						{ x: -0.5, y: 0, z:0 },
 						{ x: -0.5, y: 0, z:0 }
 					],
-					// Deserialize path in the form of comma-separated vec3s: '0 0 0, 1 1 1, 2 0 3'.
+					// Deserialize path in the form of a csv of vec3s: '0 0 0, 1 1 1, 2 0 3'.
 					}
 					parse: function(value) {
 						return value.split(,).map(coordinates.parse);
