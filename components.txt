@@ -751,6 +751,47 @@ Cursor
 				+ refreshObject - Refreshes the list of objects based off of the objects property to test for intersection.
 
 
+			Setting the Origin and Direction of the Raycaster
+
+			The raycaster has an origin, where its ray starts, and a direction, where the ray goes.
+
+			The origin of the raycaster is at the raycaster entity’s position. The origin of the raycaster can be changed by setting the position component of the raycaster entity (or parent entities of the raycaster entity).
+
+			The direction of the raycaster is in “front” of the raycaster entity (i.e., 0 0 -1, on the negative Z-axis). The direction of the raycaster can be changed by setting the rotation component of the raycaster entity (or parent entities of the raycaster entity).
+
+			For example, here is applying a raycaster along the length of a rotated bullet:
+
+			<!-- Bullet, rotated to be parallel with the ground. -->
+			<a-entity id="bullet" geometry="primitive: cylinder; height: 0.1" rotation="-90 0 0">
+				<!-- Raycaster, targets enemies, made to be as long as the bullet, positioned to the start of the bullet, rotated to align with the bullet. -->
+				<a-entity raycaster="objects: .enemies; far: 0.1"
+						  position="0 -0.5 0"
+						  rotation="90 0 0">
+				</a-entity>
+			</a-entity>
+
+
+			Whitelisting Entities to Test for Intersection
+
+			We usually don’t want everything in the scene to be tested for intersections (e.g., for collisions or for clicks). It is also good for performance to limit the number of entities to test for intersection since it is an operation that will usually run many times per second.
+
+			To select or pick the entities we want to test for intersection, we can use the objects property. If this property is not defined, then every object in the scene will be tested for intersection. objects takes a query selector value:
+
+			<a-entity cursor raycaster="objects: .clickable"></a-entity>
+			<a-entity class="clickable"
+					  geometry="primitive: box"
+					  position="1 0 0">
+			</a-entity>
+			<a-entity class="not-clickable"
+					  geometry="primitive: sphere"
+					  position="-1 0 0">
+			</a-entity>
+
+			---
+			We should probably set up the "clickable" class but not go too far into the raycaster technical details. Simply explaining it with a simple interactive scene should do nicely.
+
+
+
 			
 
 
