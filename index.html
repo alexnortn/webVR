@@ -6,8 +6,8 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<script src="https://aframe.io/releases/latest/aframe.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+	<script src="aframe.min.js"></script>
+	<script src="d3.min.js"></script>
 	<style type="text/css">
 		/* Something */
 	</style>
@@ -19,7 +19,7 @@
 		<a-assets>
 			<!-- Geometry -->
 			<a-mixin id="sphere" geometry="primitive: sphere"></a-mixin>
-			<a-mixin id="cube" geometry="primitive: box"></a-mixin>
+			<a-mixin id="cube" geometry="primitive: box; width: 1; height: 1; depth: 1"></a-mixin>
 			<!-- States -->
 			<a-mixin id="cube-hovered" material="color: magenta"></a-mixin>
 			<a-mixin id="cube-selected" material="color: cyan"></a-mixin>
@@ -31,16 +31,16 @@
 		</a-assets>
 
 		<!-- Camera Entity + Controls -->
-		<a-entity position="0 1.8 4"> <!-- Default standing height 1.8m -->
+		<a-entity position="0 1.8 7"> <!-- Default standing height 1.8m -->
 			<a-entity camera look-controls wasd-controls>
 				<a-entity position="0 0 -2"
-						  geometry="primitive: ring; radiusOuter: 0.075; radiusInner: 0.05;"
-						  material="color: coral; shader: flat"
+						  geometry="primitive: ring; radiusOuter: 0.075; radiusInner: 0.05; segmentsTheta: 32"
+						  material="color: grey; shader: flat"
 						  cursor="maxDistance: 30; fuse: true">
 					<a-animation begin="click" easing="ease-in" attribute="scale"
 								 fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
 					<a-animation begin="fusing" easing="ease-in" attribute="scale"
-								 fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
+								 fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1000"></a-animation>
 				</a-entity>
 			</a-entity>
 		</a-entity>
@@ -48,8 +48,8 @@
 		<!-- Left, red cube -->
 		<a-entity position="-3.5 1 0">
 			<a-entity mixin="cube red">
-				<a-animation begin="click" attribute="position" from="0 0 0"
-							 to="0 0 -10" dur="2000" fill="both"></a-animation>
+				<a-animation begin="click" attribute="position" repeat="1" direction="alternate" from="0 0 0"
+							 to="0 0 -10" dur="2000" fill="forwards"></a-animation>
 			</a-entity>
 		</a-entity>
 
@@ -74,6 +74,7 @@
 		<a-entity position="0 3 0" class="clickable" mixin="cube yellow"
 				  rotation="0 45 0" scale=".5 .5 .5"></a-entity>
 		
+		<!-- Ground Plane -->
 		<a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
 
 		<!-- Sky space -->
@@ -81,7 +82,7 @@
 
 		<!-- Default lighting injected by A-Frame. -->
 		<a-entity light="type: ambient; color: #BBB; intensity: 0.75"></a-entity>
-		<a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+		<a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-1 1 1"></a-entity>
 	</a-scene>
 
 	<script>
