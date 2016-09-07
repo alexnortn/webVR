@@ -3,7 +3,8 @@
 	<meta charset="utf-8">
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/0.3.1/aframe.min.js"></script> -->
 	<script src="../scripts/aframe.min.js"></script>
-	<title>A-Frame | Space Neuron</title>
+	<script src="../scripts/aframe-orbit-controls-component.js"></script>
+	<title>A-Frame | Space Neuron Orbit</title>
 </head>
 
 <body>
@@ -23,21 +24,22 @@
 		
 		<!-- Camera Entity + Controls -->
 		<a-entity id="user" teleport position="0 1.8 0"> <!-- Standing height 1.8m -->
-			<a-entity camera look-controls wasd-controls>
-				<a-entity cursor="fuse: false"
+			<!-- <a-entity camera look-controls wasd-controls> -->
+			<a-camera orbit-controls target="#poi" distance="150" look-controls-enabled=false wasd-controls-enabled=false position="0 0 0" ></a-camera>
+<!-- 				<a-entity cursor="fuse: false"
 						  position="0 0 -1"
 						  geometry="primitive: ring; segmentsTheta: 32; radiusInner: 0.0125; radiusOuter: 0.02"
 						  material="color: #333; shader: flat">
 					<a-animation begin="click" easing="ease-in-out" dur="250" repeat="1" direction="alternate"
 								 attribute="scale" to="0.1 0.1 0.1"></a-animation>
 				</a-entity>
-			</a-entity>
+			</a-entity> -->
 		</a-entity>
 		
 		<!-- POI -->
 		<a-entity id="poi"
 				  geometry="primitive: sphere; radius: 5" 
-				  position="0 -50 -50" 
+				  position="-15 -50 -75" 
 				  material="color: #394EFF; opacity: 0.5">
 		</a-entity>
 
@@ -59,7 +61,7 @@
 					_this = this,
 					pos_z;
 				document.addEventListener('click', function () {
-					beyond = !beyond;
+					// beyond = !beyond;
 					if (beyond) {
 						console.log('Beam me up!');
 						_this.el.setAttribute('position', { x: 0, y: 1.8, z: 0 });
