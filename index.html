@@ -29,9 +29,8 @@
 			<a-mixin id="blue" material="color: blue"></a-mixin>
 			<a-mixin id="yellow" material="color: yellow"></a-mixin>
 			<!-- Obj Models -->
-			<a-asset-item id="gc_obj" src="neurons/70048.obj"></a-asset-item>
-			<a-asset-item id="teapot-obj" src="teapot.obj"></a-asset-item>
-			<a-asset-item id="gc_mtl" src="neurons/70048.mtl"></a-asset-item>
+			<a-asset-item id="sac_model" src="70048.dae"></a-asset-item>
+<!-- 			<a-asset-item id="gc_mtl" src="neurons/70048.mtl"></a-asset-item> -->
 		</a-assets>
 
 		<!-- Camera Entity + Controls -->
@@ -79,8 +78,7 @@
 				  rotation="0 45 0" scale=".5 .5 .5"></a-entity>
 
 	  	<!-- Neuron Models -->
-		<!-- <a-obj-model src="#gc_obj" mtl="#gc_mtl"></a-obj-model> -->
-  		<a-obj-model src="teapot.obj" position="0 0 0"></a-obj-model>
+		<a-entity collada-model="url(70048.dae)"></a-entity>
 		
 		<!-- Ground Plane -->
 		<a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
