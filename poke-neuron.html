@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<!-- <script src="aframe.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/0.3.1/aframe.min.js"></script>
+</head>
+
+<body>
+	<a-scene>
+		<a-assets>
+			<!-- Obj Models -->
+			<a-asset-item id="gc_obj" src="neurons/20220-60.obj"></a-asset-item>
+			<a-asset-item id="gc_mtl" src="neurons/20220-60.mtl"></a-asset-item>
+			<a-asset-item id="sac_obj" src="neurons/70048-60.obj"></a-asset-item>
+			<a-asset-item id="sac_mtl" src="neurons/70048-60.mtl"></a-asset-item>
+			<!-- Sky Pano -->
+			<img id="sky" src="assets/pano.jpg">
+		</a-assets>
+
+		<!-- Camera Entity + Controls -->
+		<a-entity position="0 1.8 7"> <!-- Default standing height 1.8m -->
+			<a-entity camera look-controls wasd-controls>
+				<a-entity position="0 0 -2"
+						  geometry="primitive: ring; radiusOuter: 0.075; radiusInner: 0.05; segmentsTheta: 32"
+						  material="color: grey; shader: flat"
+						  cursor="maxDistance: 30; fuse: true">
+					<a-animation begin="click" easing="ease-in" attribute="scale"
+								 fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+					<a-animation begin="fusing" easing="ease-in" attribute="scale"
+								 fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1000"></a-animation>
+				</a-entity>
+			</a-entity>
+		</a-entity>
+		<!-- Neuron Model -->
+		<a-obj-model src="#sac_obj" mtl="#sac_mtl" position="0 -50 -100"></a-obj-model>
+		<!-- Sky -->
+		<a-sky src="#sky"></a-sky>
+	</a-scene>
+</body>
