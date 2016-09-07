@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>A-Frame | Space Neuron</title>
+		<meta name="description" content="Space Neuron">
+		<script src="../scripts/aframe.min.js"></script>
+	</head>
+
+	<body>
+		<a-scene>
+			<a-assets>
+				<!-- Obj Models -->
+				<a-asset-item id="gc_obj" src="../assets/neurons/20220-60.obj"></a-asset-item>
+				<a-asset-item id="gc_mtl" src="../assets/neurons/20220-60.mtl"></a-asset-item>
+				<a-asset-item id="sac_obj" src="../assets/neurons/70048-60.obj"></a-asset-item>
+				<a-asset-item id="sac_mtl" src="../assets/neurons/70048-60.mtl"></a-asset-item>
+				<!-- Geometry -->
+				<a-mixin id="sphere" geometry="primitive: sphere"></a-mixin>
+				<!-- Color -->
+				<a-mixin id="ikBlue" material="color: #394EFF"></a-mixin> <!-- IK Blue -->
+			</a-assets>
+			
+			<!-- Camera Entity + Controls -->
+			<a-entity id="user" position="0 1.8 0"> <!-- Standing height 1.8m -->
+				<a-entity camera look-controls wasd-controls></a-entity>
+			</a-entity>
+
+			<!-- Neurons -->
+			<a-obj-model src="#gc_obj" mtl="#gc_mtl" position="0 -50 -100"></a-obj-model>
+			<a-obj-model src="#sac_obj" mtl="#sac_mtl" position="0 -50 -100"></a-obj-model>
+			
+			<!-- Sky  -->
+			<a-sky color="#ECECEC"></a-sky>
+		</a-scene>
+	</body>
+</html>
