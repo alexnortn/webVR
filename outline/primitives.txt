@@ -1,0 +1,497 @@
+
+
+
+
+
+Alex Norton
+2016
+-
+
+
+Selected Primitives
+
+<a-box>
+
+	The box primitive, formerly called <a-cube>, creates shapes such as boxes, cubes, or walls. It is an entity that prescribes the geometry with its geometric primitive set to box.
+		
+		<a-assets>
+			<img id="texture" src="texture.png">
+		</a-assets>
+		<!-- Basic box. -->
+		<a-box color="tomato" depth="2" height="4" width="0.5"></a-box>
+		<!-- Textured box. -->
+		<a-box src="#texture"></a-box>
+
+
+	Attributes
+
+		+ color - material.color | #fff
+		+ depth - geometry.depth | 1
+		+ height - geometry.height | 1
+		+ metalness - material.metalness 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.reapeat | None
+		+ roughness material.roughness | 0.5
+		+ segments-depth - geometry.segmentsDepth | 1
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentswidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
+
+
+<a-camera>
+
+	The camera primitive places the user somewhere within the scene. It is an entity that prescribes the camera component with mappings to controls-related components.
+
+		<a-scene>
+			<a-box></a-box>
+			<a-entity position="0 1.8 5"> <!-- This is sort of light a null in AFX -->
+				<a-camera></a-camera>
+			</a-entity>
+		</a-scene>
+
+
+	Attributes
+
+		+ far - camera.far | 10000
+		+ fov - camera.fov | 80
+		+ look-controls-enabled - look-controls.enabled | true
+		+ near - camera.near | 0.5
+		+ user-height - camera.userHeight | 0
+		+ wasd-controls-enabled - wasd-controls.enabled | true
+
+
+	Manually Positioning the Camera
+
+	To position the camera, set the position on a wrapper <a-entity>. Don’t set the position directly on the camera primitive because controls will quickly override the set position:
+
+		<a-entity position="0 0 5">
+			<a-camera></a-camera>
+		</a-entity>
+
+
+	Differences with the Default Camera
+
+	When we use the camera primitive, A-Frame will not prescribe a default camera.
+
+	Note the default camera is positioned at 0 1.6 0 whereas the camera primitive will be positioned at 0 0 0. In the example below, we would see a box:
+
+		<a-box></a-box>
+		<a-camera></a-camera>
+
+	Then both the cube and camera wll be positioned at 0 0 0, the camera will be inside the cube, and thus the box won’t be visible without moving the camera. So make sure the have the camera well-positioned.
+
+	---
+	Definitely explain a bit about the camera, potentially the default camera rig set up for stereoscopic rendering
+
+
+<a-circle>
+
+	The circle primitive creates circles surfaces using the geometry component with the type set to circle.
+
+		<a-scene>
+			<a-assets>
+				<img id="platform" src="platform.jpg">
+			</a-assets>
+			<!-- Basic circle. -->
+			<a-circle color="#CCC" radius="20"></a-circle>
+			<!-- Textured circle parallel to ground. -->
+			<a-circle src="#platform" radius="50" rotation="-90 0 0"></a-circle>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #fff
+		+ metalness - material.metalness 0
+		+ opacity - material.opacity | 1
+		+ radius - geometry.radius | 1
+		+ repeat - material.reapeat | None
+		+ roughness material.roughness | 0.5
+		+ segments - geometry.segments | 32
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | None
+
+
+	Parellelizing to the Ground
+
+	To make a circle parallel to the ground, rotate it around the X-axis:
+
+		<a-plane rotation="-90 0 0"></a-plane>
+
+
+	---
+	We probably can just sort of make a circle, we don't need to enumerate all the possibilities.
+
+
+<a-cone>
+
+	The cone primitive creates a cone shape. It is an entity that prescribes the geometry with its geometric primitive set to cone.
+
+		<a-assets>
+			<img id="texture" src="texture.png">
+		</a-assets>
+		<!-- Basic cone. -->
+		<a-cone color="tomato" radius-bottom="2" radius-top="0.5"></a-cone>
+		<!-- Textured box. -->
+		<a-cone src="#texture"></a-cone>
+
+
+	Attributes
+
+		+ color - material.colo | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ ope -ended - geometry.openEnded | false
+		+ radiu -bottom - geometry.radiusBottom | 1
+		+ radiu -top - geometry.radiusTop | 0.8
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segment -height - geometry.segmentsHeight | 18
+		+ segment -radial - geometry.segmentsRadial | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ thet-length - geometry.thetaLength | 360
+		+ thet -start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+	---
+	We probably can just sort of make a cone, we don't need to enumerate all the possibilities.
+
+
+<a-cursor>
+
+	The cursor primitive places a reticle or crosshair to add clicking and interactivity with the scene. It is an entity that prescribes the cursor component and a default ring-shaped geometry. The cursor is usually placed as a child of the camera.
+
+	Read the cursor component documentation for detailed information about how the cursor works and how to use the cursor.
+
+		<a-scene>
+			<a-camera>
+				<a-cursor></a-cursor>
+			</a-camera>
+			<a-box></a-box>
+		</a-scene>
+
+
+	Attributes
+
+		+ fuse - cursor.fuse | false
+		+ max-distance - cursor.maxDistance | 1000
+		+ timeout - cursor.timeout | 1500
+
+
+	---
+	Need to figure out how to explain components vs primitives
+
+
+<a-curvedimage>
+
+	The curved image primitive creates images that bend around the user. Curved images arranged around the camera can be pleasing for legibility since each pixel sits at the same distance from the user. They can be a better choice than angled flat planes for complex layouts because they ensure a smooth surface rather than a series of awkward seams between planes. It is an entity that prescribes a double-sided open-ended cylinder with the geometry component and rendering textures on the inside of the cylinder with the material component.
+
+		<a-scene>
+			<a-assets>
+				<img id="my-image" src="image.png">
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-curvedimage src="#my-image" height="3.0" radius="5.7" theta-length="72"
+						   rotation="0 100 0" scale="0.8 0.8 0.8"></a-curvedimage>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-curvedimage src="another-image.png"></a-curved-image>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ open-ended - geometry.openEnded | false
+		+ radius - geometry.radius | 1
+		+ repeat - material.repeat | None
+		+ roughness	material - roughness	0 | 5
+		+ segments-height - geometry.segmentsHeight | 18
+		+ segments-radial - geometry.segmentsRadial | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+	Fine Tuning
+
+	Ensuring that the image is not distorted by stretching requires us to carefully set the height, radius, and theta-length attributes with respect to the image aspect ratio. Once those values are fine-tuned to avoid distortion, scale can then be used to safely adjust the distance of the curved image relative to the user.
+
+
+<a-image>
+
+	The image primitive displays an image on a flat plane. It is an entity that prescribes the geometry with its geometric primitive set to plane.
+
+		<a-scene>
+			<a-assets>
+			<img id="my-image" src="image.png">
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-image src="#my-image"></a-image>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-image src="another-image.png"></a-image>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness	- material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.repeat	No | e
+		+ roughness - material.roughness	0 | 5
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentsWidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
+
+
+	Fine Tuning
+
+	Ensuring that the image is not distorted by stretching requires us to approriately set the width and height.
+
+		<a-image src="#logo" width="200" height="100"></a-image>
+
+
+<a-light>
+
+	The light primitive adjusts the lighting setup of the scene. It is an entity that maps attributes to properties of the light component.
+
+		<!-- Red directional light shining from the top left. -->
+		<a-light color="red" position="-1 1 0"></a-light>
+		<!-- Blue point light, 5 meters in the air. -->
+		<a-light type="point" color="blue" position="0 5 0"></a-light>
+		<!-- Dim ambient lighting. -->
+		<a-light type="ambient" color="#222"></a-light>
+
+
+	Attributes
+
+		+ angle - light.angle | 60
+		+ color - light.color | #fff
+		+ decay - light.decay | 1
+		+ distance - light.distance | 0.0
+		+ ground-color - light.groundColor | #fff
+		+ intensity - light.intensity | 1.0
+		+ penumbra - light.penumbra | 0.0
+		+ type - light.type | directional
+		+ target - light.target | null
+
+
+	Differences with the Default Lighting
+
+	When we add a light, A-Frame will remove the default lighting setup (i.e., one directional light from the top-left, and one small ambient light).
+
+	---
+	Explaim this, I guess.
+
+
+<a-obj-model>
+
+	glTF is recommended for distributing assets in production over the web. Check out using the glTF component. You can either instead export to COLLADA and use the converter or try out the OBJ converter.
+
+	The .OBJ model primitive displays a 3D Wavefront model. It is an entity that maps the src and mtl attributes to the obj-model component’s obj and mtl properties respectively.
+
+		<a-scene>
+			<a-assets>
+				<a-asset-item id="crate-obj" src="crate.obj"></a-asset-item>
+				<a-asset-item id="crate-mtl" src="crate.mtl"></a-asset-item>
+			</a-assets>
+			<!-- Using the asset management system. -->
+			<a-obj-model src="#crate-obj" mtl="#crate-mtl"></a-obj-model>
+			<!-- Defining the URL inline. Not recommended. -->
+			<a-obj-model src="crate.obj" mtl="crate.mtl"></a-obj-model>
+		</a-scene>
+
+
+	Attribute
+
+		+ mtl - obj-model.mtl | null
+		+ obj - obj-model.obj | null
+
+
+	---
+	If we're gonna use this, we should explain it.
+
+
+<a-plane>
+
+	The plane primitive creates flat surfaces using the geometry component with the type set to plane.
+
+		<a-scene>
+			<a-assets>
+				<img id="ground" src="ground.jpg">
+			</a-assets>
+			<!-- Basic plane. -->
+			<a-plane color="#CCC" height="20" width="20"></a-plane>
+			<!-- Textured plane parallel to ground. -->
+			<a-plane src="#ground" height="100" width="100" rotation="-90 0 0"></a-plane>
+		</a-scene>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ height - geometry.height | 1
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 1
+		+ segments-width - geometry.segmentsWidth | 1
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ transparent - material.transparent | false
+		+ width - geometry.width | 1
+
+
+<a-ring>
+
+	The ring primitive creates a ring or disc shape. It is an entity that prescribes the geometry with its geometric primitive set to ring.
+
+		<a-assets>
+			<img id="texture" src="texture.png">
+		</a-assets>
+		<!-- Basic ring. -->
+		<a-ring color="teal" radius-inner="1" radius-outer="2"></a-ring>
+		<!-- Textured ring. -->
+		<a-ring src="#texture"></a-ring>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | None
+		+ opacity - material.opacity | 1
+		+ radius-inner - geometry.radiusInner | 0.8
+		+ radius-outer - geometry.radiusOuter | 1.2
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-phi - geometry.segmentsPhi | 10
+		+ segments-theta - geometry.segmentsTheta | 32
+		+ shader- material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 360
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | None
+
+
+	---
+	This is a pretty good example of simply pure geometry
+
+
+<a-sky>
+
+	The sky primitive adds a background to a scene or display a 360-degree photo. It is an entity that prescribes a large sphere with the material mapped to the inside.
+
+	An equirectangular image as a background:
+
+		<a-scene>
+			<a-assets>
+				<img id="sky" src="sky.png">
+			</a-assets>
+			<a-sky src="#sky"></a-sky>
+		</a-scene>
+
+	A plain color as a background:
+
+		<a-sky color="#6EBAA7"></a-sky>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ phi-length -geometry.phiLength | 360
+		+ phi-start - geometry.phiStart | 0
+		+ radius - geometry.radius | 5000
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 20
+		+ segments-width - geometry.segmentsWidth | 64
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 180
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+	Equirectangular Image
+
+	In order to be seamless, images should be equirectangular. We can find some sample equirectangular images on Flickr. To take an equirectangular photo, check out this 360-degree photography guide.
+
+
+<a-sound>
+
+	The sound primitive wraps the sound component.
+
+		<a-scene>
+		  	<a-sound src="src: click.mp3; autoplay: true" position="0 2 5"></a-sound>
+		</a-scene>
+
+	
+	Attributes
+
+		+ autoplay - sound.autoplay | false
+		+ loop - sound.loop | false
+		+ on - sound.on | null
+		+ src - sound.src | null
+		+ volume - sound.volume | 1
+
+
+<a-sphere>
+
+	The sphere primitive creates a spherical or polyhedron shapes. It wraps an entity that prescribes the geometry component with its geometric primitive set to sphere.
+
+		<a-sphere color="yellow" radius="5"></a-sphere>
+
+
+	Attributes
+
+		+ color - material.color | #FFF
+		+ metalness - material.metalness | 0
+		+ opacity - material.opacity | 1
+		+ phi-length - geometry.phiLength | 360
+		+ phi-start - geometry.phiStart | 0
+		+ radius - geometry.radius | 1
+		+ repeat - material.repeat | None
+		+ roughness - material.roughness | 0.5
+		+ segments-height - geometry.segmentsHeight | 18
+		+ segments-width - geometry.segmentsWidth | 36
+		+ shader - material.shader | standard
+		+ side - material.side | front
+		+ src - material.src | None
+		+ theta-length - geometry.thetaLength | 180
+		+ theta-start - geometry.thetaStart | 0
+		+ transparent - material.transparent | false
+
+
+
+
+
+

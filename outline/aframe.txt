@@ -1,0 +1,120 @@
+
+
+
+
+Alex Norton
+2016
+-
+
+
+What is A-Frame?
+
+A-Frame is an open-source WebVR framework for creating virtual reality (VR) experiences with HTML. We can build VR scenes that work across smartphones, desktop, the Oculus Rift, and the room-scale HTC Vive.
+
+	+ Build what would have once been a complex web app with simple HTML markup.
+	+ Speed (native) vs Accessibility + Usability (WebVR)
+	+ A-Frame is a three.js framework that brings the entity-component-system pattern to the DOM
+	+ Everything in a scene is an entity which we compose and attach components to add any appearance, behavior, and functionality.
+
+
+<a-entity> 
+
+Represents an entity, attributes represent components, and attribute values represent component properties. Components can do anything. Say someone publishes a physics component and someone else publishes an explode component. We can compose them together and attach them to the entity to add the behavior of exploding collision.
+
+	+ Get a simple figure going for this.
+	+ This feels a lot like Angular :)
+	+ MVC --> A-Frame --> three.js --> webGL
+
+A-Frame was build by the Mozilla VR team to make it quicker and easier to build 3D/VR scenes in order for them to prototype faster and to bridge the web development community into the WebVR ecosystem.
+
+	+ For WebVr to succeed, it needs content.
+
+There are only a handful of WebGL developers in the world, but there are millions of web developers, designers, and artists. A-Frame pust 3D/VR content creation into the hands of everyone.
+
+
+A-Frame reduces boilerplate
+
+Without A-Frame, starting a proper WebVR project is a lot of effort. You need to know what you are doing and repeat the same tedious work for every scene.
+
+	+ <a-scene>
+	+ Rather than creating a mesh, creating geometry, creating a material, then appending to scene, that is all also reduced to a single line of HTML.
+
+
+Intergrating with existing web frameworks
+
+	+ d3
+	+ React
+	+ Vue.js
+	+ Meteor
+	+ jQuery
+
+"A-Frame is like when MVC landed in traditional front-end work...[where] three.js is like jQuery" –@wizrav
+
+	+ Referring to Model View Controller --> Angular
+
+Three.js had made it very accessible to develop webGL, but three.js code is often loosely structured. A-frame provides a way to structure three.js code.
+
+A-Frame is a declaritive entity-component system framework for three.js
+
+Developers can modularize three.js and Javascript code within A-Frame components. These components can be composed with one another. If published and shared, these componenets can be used by other developers via HTML.
+
+	+ We're designing web applications, not websites.
+
+
+
+---
+Getting Started with A-Frame
+
+
+	+ Simply include a reference to A-Frame in your document head
+	+ Or install + require with Browserify via NPM
+
+
+Device & Platform Support
+
+Devices and platform support depends on how well the browsers support certain devices and APIs. A-Frame supports both flat (3D on a normal screen) and WebVR experiences, though its focus is heavily VR. We will break up support into two categories: flat and VR.
+
+	+ Support for flat devices depends on a browsers support for WebGL
+	+ Support for VR experience depends on a browsers suport for WebGL and support for the WebVR API. A-Frame supports version 1.0 of the WebVR API.
+	+ The Exception to this is for mobile deices, which are supported through the WebVR Pollyfill.
+
+
+Support for Controllers
+
+	+ A-Frame currently supports 6DOF controllers using Brandon Jones experimental build of Chromium with experimental controller support (e.g., Vive Controllers).
+
+
+Harward Specificiations
+
+	+ Desktop is pretty intense
+	+ For mobile, we recommend at least an iPhone 6 for iOS and a least a Galaxy S6 for Android.
+
+
+
+Best Practices
+
+Designing for VR is different than designing for flat experiences. As a new medium, there are a new sets of best practices to follow, especially to maintain user comfort and presence. This has been thoroughly wirtten about so we defer to these comprehensive guides.
+
+	+ Oculus Best Practices (for VR)
+	+ Leap Motion VR Best Practices Guidelines
+
+Some things to note:
+
+	+ The common golden rule is to never unexpectadly take control of the camera away from users.
+	+ Units (such as for position) should be considered meters. This is beeause the WebVR API returns pose in meteres which is fed into most camera controls. By considering units as meters, we achieve expected scale.
+
+
+Performance
+
+Performance is critical in VR. A high framerate muse be maintained in order for users to be comfortable. Here are some way sto help improce performance of an A-Frame scene.
+
+	+ Use recommended hardward spec
+	+ Use the stats component to keep an eye on various metrics (FPS, vertex and face count, geometry and material count, draw calls, number of entities).
+	+ We want to maximize FPS and minimize everything else.
+	+ Make use of the asset management system to benifit from browser caching and preloading. Trying to fetch assets while rendering is slower than fetching all assets before rendering.
+	+ Look to make use of geometry merging to limit draw calls when multiple geometries are sharing the same material.
+	+ If using models, look to bake your lights into textures rather than relying on realtime lighting and shadows.
+	+ Generally, the fewer number of entities and lights in the scene, the better.
+	+ Make sure your textures' resolutions are sized to powers of two (256, 512, 1024).
+	+ DRY
+	+ Mixins & Templating
