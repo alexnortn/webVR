@@ -1,0 +1,436 @@
+
+
+
+
+
+Alex Norton
+2016
+-
+
+
+Component
+
+In the entity-component-system pattern, a component is a reusable and modular chunk of data that is plugged into an entity to add appearance, behavior, and/or functionality.
+
+In A-Frame, components modify entities which are 3D objects in the scene. We mix and compose components together to build complex objects. They let us encapsulare three.js and Javascript code into modules that can be used declaratively from HTML.
+
+As an abstract analogy, if a smartphone were defined as an entity, we might use components to give it appearance (color, shape), to define its behavior (vibrate when called, shut down on low battery), or add functionality (camera, screen).
+
+Components are roughly analogous to CSS. Like how CSS rules modify the appearnace of elements, component properties modify the appearnace, behavior and functionality of entities.
+
+	+ Entities    --> DOM elements
+	+ Componenets --> CSS rules
+
+
+What a Component Looks Like
+
+A component holds a bucket of data in the form of one or more component properties. This data is used to modify the entity. Consider an engine component, we might define properties such as horsepower or cylinders.
+
+	+ Entity is abstract thing realized by the components attached to it.
+
+
+From HTML
+
+HTML attributes represent component names and the value of thsoe attributes represent component data.
+
+Single-Property Component
+
+If a component is a single-property component, meaning its data is represented by a single value, then in HTML, the component value looks like a normal HTML attribute:
+
+	<!-- 'position' is the name of the position component. -->
+	<!-- '1 2 3' is the data of the position component. -->
+	<a-entity position="1 2 3"></a-entity>
+
+
+Multi-Property Component 
+
+If a component is a Multi-Property component, meaning itsdata is represented by several properties and values, then in HTML the component value looks like inline CSS styles:
+
+	<!-- `light` is the name of the light component. -->
+	<!-- The `type` property of the light is set to `point`. -->
+	<!-- The `color` property of the light is set to `crimson`. -->
+	<a-entity light="type: point; color: crimson"></a-entity>
+
+
+Under the Hood
+
+A component is registered using AFRAME.registerComponent, which we pass a component name to reigster a component under and a component definition. Below is the outer skeleton for the position component:
+
+	<script type="text/javascript">
+		
+		AFRAME.registerComponent('position', {
+		  // ...
+		});
+
+	</script>
+
+
+A component defines a schema that defines its properties, giving anatomy to the component. The position component takes a flat vec3, or and {x, y, z} object.
+
+	<script type="text/javascript">
+
+		AFRAME.registerComponent('position', {
+		  schema: { type: 'vec3' },
+		  // ...
+		});
+
+	</script>
+
+Then a component defines lifecycle methods that handles what it does with its data, giving physiology to the component. During initialization and on attribute updates, the position component takes its vec3 value and appies it to its three.js Object3D.
+
+Components will often be talking to the three.js API.
+
+	<script type="text/javascript">
+
+		AFRAME.registerComponent('position', {
+		  schema: { type: 'vec3' },
+		  update: function () {
+		    var object3D = this.el.object3D;
+		    var data = this.data;
+		    object3D.position.set(data.x, data.y, data.z);
+		  }
+		});
+
+	</script>
+
+The position component uses only a small subset of the component API. We'll go over everything the component API has to offer.
+
+
+Components Have Methods
+
+	+ Init: Called once when the component is initialized. Used to set up initial state and instantiate variables.
+	+ Update: Called both hen the component is initialized and whenever the component's data changes.
+	+ Remove
+	+ Tick: Called on each render loop or tick of the scene. Used for continous changes.
+	+ Play
+	+ Pause
+	+ UpdateSchema: Called on every update. Can be used to dynamically modify the schema.
+
+
+Components Have Dependencies
+
+Specifying dependencies will guarantee that another component or other components are initialized before initializing the current component.
+
+	<script type="text/javascript">
+
+		// Initializes last.
+		AFRAME.registerComponent('a', {
+		  dependencies: ['b']
+		});
+		// Initializes second.
+		AFRAME.registerComponent('b', {
+		  dependencies: ['c']
+		});
+		// Initializes first.
+		AFRAME.registerComponent('c', {});
+
+	</script>
+
+
+Schema
+
+A component's schema defines and describes the property or properties it takes. A component can either be a single-property component (one flat value) or a multi-property component (multiple named values).
+
+A single-property schema might look like:
+
+	<script type="text/javascript">
+
+		schema: {
+		  type: 'int', default: 5
+		}
+
+	</script>
+
+A multi-property schema might look like:
+
+	<script type="text/javascript">
+
+		schema: {
+		  color: { default: '#FFF' },
+		  target: { type: 'selector' },
+		  uv: {
+		    default: '1 1',
+		    parse: function (value) {
+		      return value.split(' ').map(parseFloat);
+		    }
+		  },
+		}
+
+	</script>
+
+
+Property Types
+
+All properties have property types. Property types define how the component parses incoming data from the DOM, and they prescribe a default value if one is not defined in the property definition.
+
+
+Schema Inference
+
+Property types can either be assigned explicitly, or the schema will infer one given the default value.
+
+Given a default value, the schema will infer a property type and inject a parser and stringifier into the property definition:
+
+	<script type="text/javascript">
+
+		schema: {
+		  default: 32
+		}
+
+		// Will process to:
+		schema: {
+		  default: 32,
+		  type: 'number',
+		  parse: function numberParse (value) {
+		    return parseFloat(value);
+		  },
+		  stringify: function defaultStringify (value) {
+		    return value.toString();
+		  }
+		}
+
+	</script>
+
+
+Single-Property Schemas
+
+Single-property schemas define only a single anonymous flat property. They must define either a type or a default value to be able to infer an appropriate parser and stringifier.
+
+	<script type="text/javascript">
+		AFRAME.registerComponent('visible', {
+		  schema: {
+		    // Type will be inferred to be boolean.
+		    default: true
+		  },
+		  // ...
+		});
+	</script>
+
+
+Multi-Property Schemas
+
+Multi-property schemas it consists of one or more named property definitions. Unlike single-property schemas, each property has a name. When a component has properties then the HTML usage syntax will look like physics="mass: 2; velocity: 1 1 1".
+
+	<script type="text/javascript">
+		AFRAME.registerComponent('physics-body', {
+		  schema: {
+		    boundingBox: {
+		      type: 'vec3',
+		      default: { x: 1, y: 1, z: 1 }
+		    },
+		    mass: {
+		      default: 0
+		    },
+		    velocity: {
+		      type: 'vec3'
+		    }
+		  }
+		}
+	</script>
+
+
+Lifecyle Methods
+
+<!-- Important Metaphor | Use neurons -->
+
+With the schema being the anatomy, the lifecyle methods are the physiology; the schema defines the data, lifecycle methods use the data. A component has access to this.dataa which in a single-property schema is a value and in a multi-property schema is an object.
+
+The handlers will most always interact with the entity.
+
+
+Write a component
+
+Line Component
+
+Let's build an example line component that renders a line. We want to make the property API flexible enough to be able to specify the color and verticies.
+
+	<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+
+Skeleton
+
+Here is a skeleton of the component. We'll just need a schema, an update handler, and a remove handler:
+
+	<script type="text/javascript">
+		
+		var coordinates = AFRAME.utils.coordinates;
+		AFRAME.registerComponent('line', {
+			// Allow line component to accept vertices and color
+			schema: {},
+			// Create or update the line geometry
+			update: {},
+			// Remove the line geometry
+			remove: {}
+		});
+
+	</script>
+
+
+Schema
+
+We have two properties we want to accept: color and path. Thus we will need a multi-property schema. The color property will be a simple string that will be fed to THREE.Color. The path property will need a custom parser and stringifier to handle an array of vec3s for the vertices.
+
+	<script type="text/javascript">
+		
+		// Allow line component to accept verticies and color.
+		schema: {
+			color: { default: '#333' },
+			path: {
+				default: [
+					{ x: -0.5, y: 0, z:0 },
+					{ x: -0.5, y: 0, z:0 }
+				],
+				// Deserialize path in the form of comma-separated vec3s: '0 0 0, 1 1 1, 2 0 3'.
+				}
+				parse: function(value) {
+					return value.split(,).map(coordinates.parse);
+				}
+				// Serialize array of vec3s in case someone does
+				// setAttribute('line', 'path', [...]).
+				stringify: function (data) {
+					return data.map(coordinates.stringify).join(',');
+				}
+			}
+		},
+		//...
+
+	</script>
+
+
+The component API is entirely up to us. If we wanted the path to take a different syntax or abstract it further such that it maybe only accepts a starting point and a length and handle the math for the developer, we could do so.
+
+
+Update
+
+The schema will hand the dat to the update handler all parsed and ready to go. Here, we want to create a line geometry if it doesn't exist yet and update it if it does. We can create a line in three.js by combining a THREE.LineBasicMaterial and THREE.Geometry and then manually pushing verticies.
+
+	<script type="text/javascript">
+		
+		update: function(oldData) {
+			// Set color with material:
+			var material = new THREE.LineBasicMaterial({
+				color: this.data.color
+			});
+			// Add vertices to geometry
+			var geometry = new THREE.Geometry();
+			this.data.path.forEach(function(vec3) {
+				geometry.vertices.push(
+					new THREE.Vector3(vec3.x, vec3.y, vec3.z)
+				);
+			});
+			// Apply mesh.
+			this.el.setObject3D('mesh', new THREE.line(geometry, material));
+		},
+		//...
+
+	</script>
+
+Here, we update the line by completely replacing it. Though sometimes, we might want to more granularly update objects for better performance.
+
+
+Remove
+
+For removal of the line mesh from the entity, we use Entity.removeObject3D:
+
+	<script type="text/javascript">
+		
+	remove: function() {
+		this.el.removeObject3D('mesh');
+	}
+
+	</script>
+
+This will remove the object from the entity's scene graph.
+
+
+Usage
+
+Then with the line component written and registered, we can use it in HTML:
+
+	<a-scene>
+		<a-assets>
+			<a-mixin id="red" line="color: #E20049"></a-mixin>
+		</a-assets>
+		<a-entity id="happy-face" position="0 2 -10">
+			<a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: -2 1 0, 0 -2 0, 2 -1 0"></a-entity>
+		</a-entity>
+		<a-sky color="#FFEED0"></a-sky>
+	</a-scene>
+
+Happy face with the line component!
+
+
+Putting it all together:
+
+Basic line component usage:
+
+	<a-entity line="color: red; path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+
+Component Definition
+
+	<script type="text/javascript">
+		
+		var coordinates = AFRAME.utils.coordinates;
+
+		AFRAME.registerComponent('line', {
+			// Allow line component to accept vertices and color
+			schema: {
+				color: { default: '#333' },
+				path: {
+					default: [
+						{ x: -0.5, y: 0, z:0 },
+						{ x: -0.5, y: 0, z:0 }
+					],
+					// Deserialize path in the form of a csv of vec3s: '0 0 0, 1 1 1, 2 0 3'.
+					}
+					parse: function(value) {
+						return value.split(,).map(coordinates.parse);
+					}
+					// Serialize array of vec3s in case someone does
+					// setAttribute('line', 'path', [...]).
+					stringify: function (data) {
+						return data.map(coordinates.stringify).join(',');
+					}
+				}
+			},
+			// Create or update the line geometry
+			update: function(oldData) {
+				// Set color with material:
+				var material = new THREE.LineBasicMaterial({
+					color: this.data.color
+				});
+				// Add vertices to geometry
+				var geometry = new THREE.Geometry();
+				this.data.path.forEach(function(vec3) {
+					geometry.vertices.push(
+						new THREE.Vector3(vec3.x, vec3.y, vec3.z)
+					);
+				});
+				// Apply mesh.
+				this.el.setObject3D('mesh', new THREE.line(geometry, material));
+			},
+			// Remove the line geometry
+			remove: function() {
+				this.el.removeObject3D('mesh');
+			}
+		});
+
+	</script>
+
+Usage:
+
+	<a-scene>
+		<a-assets>
+			<a-mixin id="red" line="color: #E20049"></a-mixin>
+		</a-assets>
+		<a-entity id="happy-face" position="0 2 -10">
+			<a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
+			<a-entity mixin="red" line="path: -2 1 0, 0 -2 0, 2 -1 0"></a-entity>
+		</a-entity>
+		<a-sky color="#FFEED0"></a-sky>
+	</a-scene>
+
+---
+
+I don't think we have time to go into writing your own components, maybe just overview + use.
