@@ -23,17 +23,22 @@
 		<!-- Camera Entity + Controls -->
 		<a-entity position="0 1.8 7"> <!-- Default standing height 1.8m -->
 			<a-entity camera look-controls wasd-controls>
-				<a-entity cursor="fuse: true; timeout: 500"
+				<a-entity cursor="fuse: false"
 						  position="0 0 -1"
-						  geometry="primitive: ring; segmentsTheta: 32; radiusInner: 0.025; radiusOuter: 0.035"
-						  material="color: black; shader: flat">
-					<a-animation begin="click" easing="ease-in" attribute="scale"
-								 fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
-					<a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
-						         fill="forwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+						  geometry="primitive: ring; segmentsTheta: 32; radiusInner: 0.0125; radiusOuter: 0.02"
+						  material="color: #333; shader: flat">
+					<a-animation begin="click" easing="ease-in-out" dur="250" repeat="1" direction="alternate"
+								 attribute="scale" to="0.1 0.1 0.1"></a-animation>
+					<a-animation begin="mouseenter" easing="ease-in" dur="250" direction="forwards"
+								 attribute="scale" to="1.5 1.5 1.5"></a-animation>
+					<a-animation begin="mouseleave" easing="ease-out" dur="250" direction="forwards"
+								 attribute="scale" to="1 1 1"></a-animation>
 				</a-entity>
 			</a-entity>
 		</a-entity>
+
+		<!-- Decide which elements are interactive -->
+		<a-entity cursor raycaster="far: 20; interval: 1000; objects: .clickable"></a-entity>
 
 		<!-- Left, red cube -->
 		<a-entity position="-3.5 1 0">
