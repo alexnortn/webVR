@@ -23,7 +23,7 @@
 			<a-mixin id="red" material="color: red"></a-mixin>
 			<a-mixin id="green" material="color: green"></a-mixin>
 			<a-mixin id="blue" material="color: blue"></a-mixin>
-			<a-mixin id="springGreen" material="color: #00FF7F"></a-mixin>
+			<a-mixin id="ikBlue" material="color: #394EFF"></a-mixin>
 			<!-- Sky Gradient -->
 			<img id="sky" src="../assets/overcast.jpg">
 		</a-assets>
@@ -45,7 +45,7 @@
 
 		<!-- Left, red cube -->
 		<a-entity position="-3.5 1 0">
-			<a-entity mixin="cube springGreen">
+			<a-entity mixin="cube ikBlue">
 				<a-animation begin="click" attribute="position" repeat="1" direction="alternate" from="0 0 0"
 							 to="0 0 -10" dur="2000" fill="forwards"></a-animation>
 			</a-entity>
@@ -53,7 +53,7 @@
 
 		<!-- Center, green cube -->
 		<a-entity position="0 1 0">
-			<a-entity mixin="cube springGreen">
+			<a-entity mixin="cube ikBlue">
 				<a-animation begin="click" attribute="rotation" to="0 360 0"
 							 easing="linear" dur="2000" fill="backwards"></a-animation>
 			</a-entity>
@@ -61,15 +61,15 @@
 
 		<!-- Right, blue cube -->
 		<a-entity position="3.5 1 0" rotation="0 45 0">
-			<a-entity mixin="cube springGreen">
+			<a-entity mixin="cube ikBlue">
 				<a-animation begin="click" fill="forwards" repeat="1"
 							 direction="alternate" attribute="position" from="0 0 0"
 							 to="15 0 0" dur="2000"></a-animation>
 			</a-entity>
 		</a-entity>
 
-		<!-- Back, springGreen cube -->
-		<a-entity position="0 3 0" class="clickable" mixin="cube springGreen"
+		<!-- Back, ikBlue cube -->
+		<a-entity position="0 3 0" class="clickable" mixin="cube ikBlue"
 				  rotation="0 45 0" scale=".5 .5 .5">
 			<a-animation begin="mouseenter" attribute="scale" to="1.1 1.1 1.1"
 					     easing="ease-in-out" dur="250" repeat="1" direction="alternate"></a-animation>
