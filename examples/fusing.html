@@ -23,7 +23,9 @@
 			<a-mixin id="red" material="color: red"></a-mixin>
 			<a-mixin id="green" material="color: green"></a-mixin>
 			<a-mixin id="blue" material="color: blue"></a-mixin>
-			<a-mixin id="yellow" material="color: yellow"></a-mixin>
+			<a-mixin id="springGreen" material="color: #00FF7F"></a-mixin>
+			<!-- Sky Gradient -->
+			<img id="sky" src="../assets/overcast.jpg">
 		</a-assets>
 
 		<!-- Camera Entity + Controls -->
@@ -43,7 +45,7 @@
 
 		<!-- Left, red cube -->
 		<a-entity position="-3.5 1 0">
-			<a-entity mixin="cube red">
+			<a-entity mixin="cube springGreen">
 				<a-animation begin="click" attribute="position" repeat="1" direction="alternate" from="0 0 0"
 							 to="0 0 -10" dur="2000" fill="forwards"></a-animation>
 			</a-entity>
@@ -51,7 +53,7 @@
 
 		<!-- Center, green cube -->
 		<a-entity position="0 1 0">
-			<a-entity mixin="cube green">
+			<a-entity mixin="cube springGreen">
 				<a-animation begin="click" attribute="rotation" to="0 360 0"
 							 easing="linear" dur="2000" fill="backwards"></a-animation>
 			</a-entity>
@@ -59,21 +61,25 @@
 
 		<!-- Right, blue cube -->
 		<a-entity position="3.5 1 0" rotation="0 45 0">
-			<a-entity mixin="cube blue">
+			<a-entity mixin="cube springGreen">
 				<a-animation begin="click" fill="forwards" repeat="1"
 							 direction="alternate" attribute="position" from="0 0 0"
 							 to="15 0 0" dur="2000"></a-animation>
 			</a-entity>
 		</a-entity>
 
-		<!-- Back, yellow cube -->
-		<a-entity position="0 3 0" class="clickable" mixin="cube yellow"
-				  rotation="0 45 0" scale=".5 .5 .5"></a-entity>
+		<!-- Back, springGreen cube -->
+		<a-entity position="0 3 0" class="clickable" mixin="cube springGreen"
+				  rotation="0 45 0" scale=".5 .5 .5">
+			<a-animation begin="mouseenter" attribute="scale" to="1.1 1.1 1.1"
+					     easing="ease-in-out" dur="250" repeat="1" direction="alternate"></a-animation>
+		</a-entity>
 		
 		<!-- Ground Plane -->
-		<a-plane rotation="-90 0 0" width="40" height="40" color="#7BC8A4"></a-plane>
+		<a-circle rotation="-90 0 0" radius="5" color="#666" segments="64" position="0 0 7"></a-circle>
 
 		<!-- Sky space -->
-		<a-sky color="#ECECEC"></a-sky>
+		<!-- <a-sky color="#ECECEC"></a-sky> -->
+		<a-sky src="#sky"></a-sky>
 	</a-scene>
 </body>
