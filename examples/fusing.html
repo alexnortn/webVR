@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
@@ -16,9 +11,6 @@
 			<!-- Geometry -->
 			<a-mixin id="sphere" geometry="primitive: sphere"></a-mixin>
 			<a-mixin id="cube" geometry="primitive: box; width: 1; height: 1; depth: 1"></a-mixin>
-			<!-- States -->
-			<a-mixin id="cube-hovered" material="color: magenta"></a-mixin>
-			<a-mixin id="cube-selected" material="color: cyan"></a-mixin>
 			<!-- Color -->
 			<a-mixin id="red" material="color: red"></a-mixin>
 			<a-mixin id="green" material="color: green"></a-mixin>
@@ -68,15 +60,15 @@
 			</a-entity>
 		</a-entity>
 
-		<!-- Back, ikBlue cube -->
-		<a-entity position="0 3 0" class="clickable" mixin="cube ikBlue"
-				  rotation="0 45 0" scale=".5 .5 .5">
+		<!-- Back, ikBlue sphere -->
+		<a-entity position="0 3 0" class="clickable" mixin="sphere ikBlue"
+				  scale=".5 .5 .5">
 			<a-animation begin="mouseenter" attribute="scale" to="1.1 1.1 1.1"
 					     easing="ease-in-out" dur="250" repeat="1" direction="alternate"></a-animation>
 		</a-entity>
 		
 		<!-- Ground Plane -->
-		<a-circle rotation="-90 0 0" radius="5" color="#666" segments="64" position="0 0 7"></a-circle>
+		<a-circle rotation="-90 0 0" radius="5" color="#666" position="0 0 7"></a-circle>
 
 		<!-- Sky space -->
 		<!-- <a-sky color="#ECECEC"></a-sky> -->
