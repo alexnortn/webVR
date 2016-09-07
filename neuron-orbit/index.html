@@ -6,6 +6,9 @@
 		<meta name="description" content="Space Neuron Orbit">
 		<script src="../scripts/aframe.min.js"></script>
 		<script src="components/aframe-orbit-controls-component.js"></script>
+		<script src="components/update-raycaster.js"></script>
+		<script src="components/aframe-event-set-component.js"></script>
+		<script src="components/aframe-template-component.js"></script>
 	</head>
 
 	<body>
@@ -20,14 +23,30 @@
 				<a-mixin id="sphere" geometry="primitive: sphere"></a-mixin>
 				<!-- Color -->
 				<a-mixin id="ikBlue" material="color: #394EFF"></a-mixin> <!-- IK Blue -->
+
+				<!-- Sphere link template to be reused. -->
+				<script id="link-template" type="text/html">
+					<a-sphere class="link" radius="5"
+							  position="-15 -50 -75"
+							  position="-15 -50 -75"
+							  color="#394EFF"
+							  teleport
+							  event-set__1="_event: mousedown; scale: 1 1 1"
+							  event-set__2="_event: mouseup; scale: 1.2 1.2 1.2"
+							  event-set__3="_event: mouseenter; scale: 1.2 1.2 1.2"
+							  event-set__4="_event: mouseenter; color: red"
+							  event-set__5="_event: mouseleave; scale: 1 1 1"
+							  event-set__6="_event: mouseleave; color: #394EFF"
+							  update-raycaster="#cursor"></a-sphere>
+					</script>
+				</a-assets>
 			</a-assets>
 			
 			<!-- Camera Entity + Controls -->
-			<a-entity id="user" teleport position="0 1.8 0">
+			<a-entity id="user" position="0 1.8 0">
 				<a-camera id="camera" 
-						  orbit-controls="enabled: true"
-						  target="#poi"
-						  distance="150"
+						  look-swap
+						  orbit-controls="enabled: true; target: start-poi; distance: 150"
 						  look-controls-enabled=false
 						  wasd-controls-enabled=false>
 
@@ -35,7 +54,8 @@
 							  id="cursor"
 							  position="0 0 -1"
 							  geometry="primitive: ring; segmentsTheta: 32; radiusInner: 0.0125; radiusOuter: 0.02"
-							  material="color: #333; shader: flat">
+							  material="color: #333; shader: flat"
+							  raycaster="objects: .link"></a-cursor>>
 					<a-animation begin="click" easing="ease-in-out" dur="250" repeat="1" direction="alternate"
 								 attribute="scale" to="0.1 0.1 0.1"></a-animation>
 
@@ -43,10 +63,8 @@
 			</a-entity>
 			
 			<!-- POI -->
-			<a-entity id="poi"
-					  geometry="primitive: sphere; radius: 5" 
-					  position="-15 -50 -75" 
-					  material="color: #394EFF; opacity: 0.5">
+			<a-entity id="links">
+				<a-entity class="poi" id="start-poi" template="src: #link-template"></a-entity>
 			</a-entity>
 
 			<!-- Neurons -->
@@ -63,33 +81,55 @@
 			// Component to teleport user near + far
 			AFRAME.registerComponent('teleport', {
 				init: function () {
-					var beyond = true,
+					var	beyond = true,
 						_this = this,
-						camera = document.querySelector('#camera'),
-						cursor = document.querySelector('#cursor'),
-						pos_z;
-					document.addEventListener('click', function () {
+						user = document.querySelector('#user');
+						camera = document.querySelector('#camera');
+
+					var start_pos = _this.el.getComputedAttribute('position'),
+						start_distance = camera.getComputedAttribute('orbit-controls').distance;
+					
+					_this.el.addEventListener('click', function () {
 						beyond = !beyond;
-						if (beyond) {
-							console.log('Beam me up!');
-							camera.setAttribute('look-controls-enabled', false);
-							camera.setAttribute('orbit-controls', 'enabled', true);
-							// _this.el.setAttribute('position', { x: 0, y: 1.8, z: 0 });
+
+						if (!beyond) {
+							console.log('Beam me in!');
+							var pos = _this.el.getComputedAttribute('position');
+							user.setAttribute('position', { x: pos.x, y: pos.y, z: pos.z });
+							camera.setAttribute('orbit-controls', 'distance', 25);
+							_this.el.setAttribute('material', 'opacity', 0);
 						}
 						else {
-							// pos_z = -100;
 							console.log('Beam me out!');
-							var pos = camera.getComputedAttribute('position');
-							console.log(pos);
-							camera.setAttribute('look-controls-enabled', true);
-							camera.setAttribute('orbit-controls', 'enabled', false);
-							// _this.el.setAttribute('position', { x: 0, y: -50, z: -100 });
+							user.setAttribute('position', { x: start_pos.x, y: start_pos.y, z: start_pos.z });
+							camera.setAttribute('orbit-controls', 'distance', start_distance);
+							_this.el.setAttribute('material', 'opacity', 1);
 						}
 					});
-				},
+				}
+			});
 
-				tick: function (t) { 
-					// console.log(cursor.getComputedAttribute('position'));
+			// Component to teleport user near + far
+			AFRAME.registerComponent('look-swap', {
+				init: function () {
+					var beyond = true,
+						_this = this,
+						camera = document.querySelector('#camera');
+					
+					document.addEventListener('click', function () {
+						beyond = !beyond;
+						
+						if (beyond) {
+							console.log('See Far!');
+							camera.setAttribute('look-controls-enabled', false);
+							camera.setAttribute('orbit-controls', 'enabled', true);
+						}
+						else {
+							console.log('See Near!');
+							camera.setAttribute('look-controls-enabled', true);
+							camera.setAttribute('orbit-controls', 'enabled', false);
+						}
+					});
 				},
 			});
 
