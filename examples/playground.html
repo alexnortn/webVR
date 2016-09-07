@@ -13,12 +13,11 @@
 			<a-mixin id="sphere" geometry="primitive: sphere"></a-mixin>
 			<a-mixin id="cube" geometry="primitive: box; width: 1; height: 1; depth: 1"></a-mixin>
 			<!-- Color -->
-			<a-mixin id="red" material="color: red"></a-mixin>
-			<a-mixin id="green" material="color: green"></a-mixin>
-			<a-mixin id="blue" material="color: blue"></a-mixin>
-			<a-mixin id="ikBlue" material="color: #394EFF"></a-mixin>
+			<a-mixin id="ikBlue" material="color: #394EFF"></a-mixin> <!-- IK Blue -->
 			<!-- Sky Gradient -->
 			<img id="sky" src="../assets/overcast.jpg">
+			<!-- Floor Texture -->
+			<img id="floor-txt" src="../assets/floor.png">
 		</a-assets>
 
 		<!-- Camera Entity + Controls -->
@@ -74,7 +73,7 @@
 		</a-entity>
 		
 		<!-- Ground Plane -->
-		<a-circle rotation="-90 0 0" radius="5" color="#666" position="0 0 7"></a-circle>
+		<a-circle src="#floor-txt" rotation="-90 0 0" radius="5" color="#FFF" position="0 0 7"></a-circle>
 
 		<!-- Sky -->
 		<a-sky src="#sky"></a-sky>
