@@ -91,6 +91,19 @@ p {
 	line-height: 1.5em;
 }
 
+a {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 18px;
+	line-height: 1.5em;
+	color: black;
+	padding-left: 25px;
+	line-height: 1.5em;
+}
+
+ul {
+	margin-left: 25px;
+}
+
 li {
 	margin-top: 10px;
 }
